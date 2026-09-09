@@ -2,6 +2,7 @@ package com.isacofff.clientbase.modules.features;
 
 import com.isacofff.clientbase.Category;
 import com.isacofff.clientbase.modules.Module;
+import net.minecraft.client.Minecraft;
 
 public class ToggleSprint extends Module {
 
@@ -15,7 +16,9 @@ public class ToggleSprint extends Module {
 
     @Override
     public void onUpdate() {
-        // Sprint functionality will be added after the correct
-        // Eaglercraft player API is confirmed.
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.thePlayer != null && mc.thePlayer.onGround) {
+            mc.thePlayer.setSprinting(true);
+        }
     }
 }
