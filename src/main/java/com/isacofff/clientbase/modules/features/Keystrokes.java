@@ -34,57 +34,23 @@ public void render(ScaledResolution resolution) {
     int size = 24;
     int gap = 2;
 
-    drawKey(
-            font,
-            "W",
-            x + size + gap,
-            y,
-            Keyboard.isKeyDown(Keyboard.KEY_W)
-    );
+    drawKey(font, "W", x + size + gap, y,
+            Keyboard.isKeyDown(Keyboard.KEY_W));
 
-    drawKey(
-            font,
-            "A",
-            x,
-            y + size + gap,
-            Keyboard.isKeyDown(Keyboard.KEY_A)
-    );
+    drawKey(font, "A", x, y + size + gap,
+            Keyboard.isKeyDown(Keyboard.KEY_A));
 
-    drawKey(
-            font,
-            "S",
-            x + size + gap,
-            y + size + gap,
-            Keyboard.isKeyDown(Keyboard.KEY_S)
-    );
+    drawKey(font, "S", x + size + gap, y + size + gap,
+            Keyboard.isKeyDown(Keyboard.KEY_S));
 
-    drawKey(
-            font,
-            "D",
-            x + (size + gap) * 2,
-            y + size + gap,
-            Keyboard.isKeyDown(Keyboard.KEY_D)
-    );
+    drawKey(font, "D", x + (size + gap) * 2, y + size + gap,
+            Keyboard.isKeyDown(Keyboard.KEY_D));
 }
 
-private void drawKey(
-        FontRenderer font,
-        String text,
-        int x,
-        int y,
-        boolean pressed
-) {
-    int background = pressed
-            ? 0xFF555555
-            : 0xAA222222;
+private void drawKey(FontRenderer font, String text, int x, int y, boolean pressed) {
+    int background = pressed ? 0xFF555555 : 0xAA222222;
 
-    Gui.drawRect(
-            x,
-            y,
-            x + 24,
-            y + 24,
-            background
-    );
+    Gui.drawRect(x, y, x + 24, y + 24, background);
 
     int textWidth = font.getStringWidth(text);
 
