@@ -1,12 +1,12 @@
 package net.minecraft.client.gui;
 
 import com.isacofff.clientbase.Client;
+import com.isacofff.clientbase.Category;
 import com.isacofff.clientbase.modules.Module;
 import com.isacofff.clientbase.settings.Setting;
 import com.isacofff.clientbase.settings.Setting.BooleanSetting;
 import com.isacofff.clientbase.settings.Setting.ModeSetting;
 import com.isacofff.clientbase.settings.Setting.NumberSetting;
-import com.isacofff.clientbase.Category;
 
 import net.lax1dude.eaglercraft.Keyboard;
 import net.lax1dude.eaglercraft.KeyboardConstants;
@@ -17,51 +17,56 @@ import java.util.ArrayList;
 
 public class ClickGuiScreen extends GuiScreen {
 
-    /*
-     * ============================================================
-     * NONECLIENT - CLEAN / FEATHER-INSPIRED CLICK GUI
-     * ============================================================
-     */
+    /* =========================
+       COLORS
+       ========================= */
 
-    private static final int BG = 0xF20D0F12;
+    private static final int BG = 0x99000000;
 
-    private static final int WINDOW = 0xFF17191D;
-    private static final int SIDEBAR = 0xFF121417;
-    private static final int TOPBAR = 0xFF1B1E23;
+    private static final int WINDOW = 0xFF15171A;
+    private static final int SIDEBAR = 0xFF111316;
+    private static final int HEADER = 0xFF191C20;
 
-    private static final int CARD = 0xFF1D2025;
-    private static final int CARD_HOVER = 0xFF252930;
-    private static final int CARD_ENABLED = 0xFF222A33;
+    private static final int CARD = 0xFF1B1E22;
+    private static final int CARD_HOVER = 0xFF22262B;
+    private static final int CARD_ENABLED = 0xFF202932;
 
-    private static final int BORDER = 0xFF2B2F36;
+    private static final int BORDER = 0xFF292D33;
 
     private static final int ACCENT = 0xFF5AA9FF;
-    private static final int ACCENT_DARK = 0xFF397FC4;
 
-    private static final int TEXT = 0xFFF1F3F5;
-    private static final int TEXT_SECONDARY = 0xFFA5AAB2;
-    private static final int TEXT_MUTED = 0xFF6F747D;
+    private static final int TEXT = 0xFFF2F3F5;
+    private static final int TEXT_SECONDARY = 0xFFAAAFB7;
+    private static final int TEXT_MUTED = 0xFF686D75;
 
-    private static final int SETTING_BG = 0xFF191C21;
-    private static final int SLIDER_BG = 0xFF343941;
+    private static final int SETTINGS = 0xFF171A1E;
+    private static final int SLIDER = 0xFF353A42;
 
-    private static final int WINDOW_WIDTH = 620;
-    private static final int WINDOW_HEIGHT = 390;
+    /* =========================
+       SIZE
+       ========================= */
 
-    private static final int SIDEBAR_WIDTH = 125;
-    private static final int TOPBAR_HEIGHT = 42;
+    private static final int WINDOW_WIDTH = 500;
+    private static final int WINDOW_HEIGHT = 325;
 
-    private static final int CARD_HEIGHT = 42;
-    private static final int CARD_GAP = 7;
+    private static final int SIDEBAR_WIDTH = 105;
+    private static final int HEADER_HEIGHT = 36;
+
+    private static final int CARD_HEIGHT = 38;
+    private static final int CARD_GAP = 6;
 
     private static final int MOVE_SPEED = 8;
+
+    /* =========================
+       POSITION
+       ========================= */
 
     private int windowX;
     private int windowY;
 
     private int selectedCategory = 0;
 
-    private boolean draggingWindow = false;
+    private boolean draggingWindow;
     private int dragX;
     private int dragY;
 
@@ -70,7 +75,7 @@ public class ClickGuiScreen extends GuiScreen {
     private NumberSetting draggingSlider;
 
     private final ArrayList<Category> categories =
-            new ArrayList<>();
+            new ArrayList<Category>();
 
     public ClickGuiScreen() {
 
@@ -78,23 +83,21 @@ public class ClickGuiScreen extends GuiScreen {
             categories.add(category);
         }
 
-        windowX = (this.width - WINDOW_WIDTH) / 2;
-        windowY = (this.height - WINDOW_HEIGHT) / 2;
+        windowX = (width - WINDOW_WIDTH) / 2;
+        windowY = (height - WINDOW_HEIGHT) / 2;
 
-        if (windowX < 10) {
-            windowX = 10;
+        if (windowX < 5) {
+            windowX = 5;
         }
 
-        if (windowY < 10) {
-            windowY = 10;
+        if (windowY < 5) {
+            windowY = 5;
         }
     }
 
-    /*
-     * ============================================================
-     * DRAW
-     * ============================================================
-     */
+    /* =========================
+       DRAW
+       ========================= */
 
     @Override
     public void drawScreen(
@@ -106,24 +109,17 @@ public class ClickGuiScreen extends GuiScreen {
         drawRect(
                 0,
                 0,
-                this.width,
-                this.height,
+                width,
+                height,
                 BG
         );
 
         if (draggingWindow) {
-
-            windowX =
-                    mouseX - dragX;
-
-            windowY =
-                    mouseY - dragY;
+            windowX = mouseX - dragX;
+            windowY = mouseY - dragY;
         }
 
-        drawMainWindow(
-                mouseX,
-                mouseY
-        );
+        drawWindow(mouseX, mouseY);
 
         super.drawScreen(
                 mouseX,
@@ -132,13 +128,11 @@ public class ClickGuiScreen extends GuiScreen {
         );
     }
 
-    /*
-     * ============================================================
-     * MAIN WINDOW
-     * ============================================================
-     */
+    /* =========================
+       WINDOW
+       ========================= */
 
-    private void drawMainWindow(
+    private void drawWindow(
             int mouseX,
             int mouseY
     ) {
@@ -146,9 +140,7 @@ public class ClickGuiScreen extends GuiScreen {
         int x = windowX;
         int y = windowY;
 
-        /*
-         * Main background
-         */
+        /* Main window */
 
         drawRect(
                 x,
@@ -158,9 +150,7 @@ public class ClickGuiScreen extends GuiScreen {
                 WINDOW
         );
 
-        /*
-         * Sidebar
-         */
+        /* Sidebar */
 
         drawRect(
                 x,
@@ -170,16 +160,14 @@ public class ClickGuiScreen extends GuiScreen {
                 SIDEBAR
         );
 
-        /*
-         * Top bar
-         */
+        /* Header */
 
         drawRect(
                 x + SIDEBAR_WIDTH,
                 y,
                 x + WINDOW_WIDTH,
-                y + TOPBAR_HEIGHT,
-                TOPBAR
+                y + HEADER_HEIGHT,
+                HEADER
         );
 
         drawOutline(
@@ -190,77 +178,51 @@ public class ClickGuiScreen extends GuiScreen {
                 BORDER
         );
 
-        /*
-         * Logo
-         */
+        /* Logo */
 
         fontRendererObj.drawString(
-                "NONECLIENT",
-                x + 16,
-                y + 15,
+                "NONE",
+                x + 12,
+                y + 12,
                 TEXT
         );
 
         fontRendererObj.drawString(
+                "CLIENT",
+                x + 12,
+                y + 23,
+                TEXT_MUTED
+        );
+
+        /* Header version */
+
+        fontRendererObj.drawString(
                 "1.12.2",
-                x + SIDEBAR_WIDTH + 15,
-                y + 15,
+                x + SIDEBAR_WIDTH + 14,
+                y + 13,
                 TEXT_SECONDARY
         );
 
-        /*
-         * Sidebar categories
-         */
+        drawCategories(mouseX, mouseY);
 
-        drawCategories(
-                mouseX,
-                mouseY
-        );
-
-        /*
-         * Main content
-         */
-
-        drawModules(
-                mouseX,
-                mouseY
-        );
-
-        /*
-         * Selected module settings
-         */
-
-        if (selectedModule != null) {
-
-            drawSettings(
-                    selectedModule,
-                    mouseX,
-                    mouseY
-            );
-        }
+        drawModules(mouseX, mouseY);
     }
 
-    /*
-     * ============================================================
-     * CATEGORIES
-     * ============================================================
-     */
+    /* =========================
+       CATEGORIES
+       ========================= */
 
     private void drawCategories(
             int mouseX,
             int mouseY
     ) {
 
-        int x =
-                windowX + 8;
-
-        int y =
-                windowY + TOPBAR_HEIGHT + 12;
+        int x = windowX + 7;
+        int y = windowY + HEADER_HEIGHT + 10;
 
         for (int i = 0; i < categories.size(); i++) {
 
-            Category category =
-                    categories.get(i);
+            Category category = categories.get(i);
 
             boolean selected =
                     i == selectedCategory;
@@ -271,8 +233,8 @@ public class ClickGuiScreen extends GuiScreen {
                             mouseY,
                             x,
                             y,
-                            SIDEBAR_WIDTH - 16,
-                            30
+                            SIDEBAR_WIDTH - 14,
+                            28
                     );
 
             if (selected) {
@@ -280,16 +242,16 @@ public class ClickGuiScreen extends GuiScreen {
                 drawRect(
                         x,
                         y,
-                        x + SIDEBAR_WIDTH - 16,
-                        y + 30,
-                        0xFF24282E
+                        x + SIDEBAR_WIDTH - 14,
+                        y + 28,
+                        0xFF20252A
                 );
 
                 drawRect(
                         x,
                         y,
-                        x + 3,
-                        y + 30,
+                        x + 2,
+                        y + 28,
                         ACCENT
                 );
 
@@ -298,30 +260,28 @@ public class ClickGuiScreen extends GuiScreen {
                 drawRect(
                         x,
                         y,
-                        x + SIDEBAR_WIDTH - 16,
-                        y + 30,
-                        0xFF1C2025
+                        x + SIDEBAR_WIDTH - 14,
+                        y + 28,
+                        0xFF191C20
                 );
             }
 
             fontRendererObj.drawString(
                     category.name(),
-                    x + 12,
-                    y + 10,
+                    x + 10,
+                    y + 9,
                     selected
                             ? TEXT
                             : TEXT_SECONDARY
             );
 
-            y += 34;
+            y += 32;
         }
     }
 
-    /*
-     * ============================================================
-     * MODULES
-     * ============================================================
-     */
+    /* =========================
+       MODULES
+       ========================= */
 
     private void drawModules(
             int mouseX,
@@ -335,72 +295,104 @@ public class ClickGuiScreen extends GuiScreen {
         Category category =
                 categories.get(selectedCategory);
 
-        int contentX =
-                windowX + SIDEBAR_WIDTH + 15;
+        int x =
+                windowX
+                        + SIDEBAR_WIDTH
+                        + 14;
 
-        int contentY =
-                windowY + TOPBAR_HEIGHT + 15;
+        int y =
+                windowY
+                        + HEADER_HEIGHT
+                        + 13;
 
-        int contentWidth =
+        int availableWidth =
                 WINDOW_WIDTH
                         - SIDEBAR_WIDTH
-                        - 30;
+                        - 28;
 
-        /*
-         * Header
-         */
+        /* Title */
 
         fontRendererObj.drawString(
                 category.name(),
-                contentX,
-                contentY,
+                x,
+                y,
                 TEXT
         );
 
         fontRendererObj.drawString(
                 "Modules",
-                contentX,
-                contentY + 15,
+                x,
+                y + 13,
                 TEXT_MUTED
         );
 
-        contentY += 32;
+        y += 30;
 
         ArrayList<Module> modules =
                 Client.INSTANCE.manager
                         .getModulesByCategory(category);
 
-        for (Module module : modules) {
+        /*
+         * Two-column layout
+         */
 
-            drawModuleCard(
-                    module,
-                    contentX,
-                    contentY,
-                    contentWidth,
-                    mouseX,
-                    mouseY
-            );
+        int columnGap = 6;
 
-            contentY +=
-                    CARD_HEIGHT + CARD_GAP;
+        int cardWidth =
+                (availableWidth - columnGap) / 2;
 
-            /*
-             * Don't draw outside the window.
-             */
+        int leftX = x;
+        int rightX = x + cardWidth + columnGap;
 
-            if (contentY >
-                    windowY + WINDOW_HEIGHT - 20) {
+        for (int i = 0; i < modules.size(); i++) {
+
+            Module module = modules.get(i);
+
+            int column = i % 2;
+            int row = i / 2;
+
+            int cardX =
+                    column == 0
+                            ? leftX
+                            : rightX;
+
+            int cardY =
+                    y + row *
+                            (CARD_HEIGHT + CARD_GAP);
+
+            if (cardY + CARD_HEIGHT >
+                    windowY + WINDOW_HEIGHT - 8) {
 
                 break;
             }
+
+            drawModuleCard(
+                    module,
+                    cardX,
+                    cardY,
+                    cardWidth,
+                    mouseX,
+                    mouseY
+            );
+        }
+
+        /*
+         * Settings panel
+         */
+
+        if (selectedModule != null) {
+
+            drawSettings(
+                    selectedModule,
+                    mouseX,
+                    mouseY
+            );
         }
     }
 
-    /*
-     * ============================================================
-     * MODULE CARD
-     * ============================================================
-     */
+    /* =========================
+       MODULE CARD
+       ========================= */
 
     private void drawModuleCard(
             Module module,
@@ -427,17 +419,14 @@ public class ClickGuiScreen extends GuiScreen {
         boolean selected =
                 module == selectedModule;
 
-        int background =
-                CARD;
+        int background = CARD;
 
         if (hovered) {
-            background =
-                    CARD_HOVER;
+            background = CARD_HOVER;
         }
 
         if (enabled) {
-            background =
-                    CARD_ENABLED;
+            background = CARD_ENABLED;
         }
 
         drawRect(
@@ -459,43 +448,47 @@ public class ClickGuiScreen extends GuiScreen {
             );
         }
 
-        /*
-         * Module name
-         */
+        /* Name */
 
         fontRendererObj.drawString(
                 module.getName(),
-                x + 13,
-                y + 10,
+                x + 9,
+                y + 9,
                 enabled
                         ? TEXT
                         : TEXT_SECONDARY
         );
 
-        /*
-         * Description
-         */
+        /* Description */
 
         String description =
                 module.getDescription();
 
         if (description != null
+                && !description.equals("- - -")
                 && !description.isEmpty()) {
 
+            String shortDescription =
+                    description;
+
+            if (shortDescription.length() > 16) {
+                shortDescription =
+                        shortDescription.substring(0, 16)
+                                + "...";
+            }
+
             fontRendererObj.drawString(
-                    description,
-                    x + 13,
-                    y + 25,
+                    shortDescription,
+                    x + 9,
+                    y + 23,
                     TEXT_MUTED
             );
         }
 
-        /*
-         * Small enable indicator
-         */
+        /* Toggle indicator */
 
         int indicatorX =
-                x + width - 20;
+                x + width - 15;
 
         int indicatorY =
                 y + 15;
@@ -505,8 +498,8 @@ public class ClickGuiScreen extends GuiScreen {
             drawRect(
                     indicatorX,
                     indicatorY,
-                    indicatorX + 8,
-                    indicatorY + 8,
+                    indicatorX + 7,
+                    indicatorY + 7,
                     ACCENT
             );
 
@@ -515,18 +508,16 @@ public class ClickGuiScreen extends GuiScreen {
             drawOutline(
                     indicatorX,
                     indicatorY,
-                    indicatorX + 8,
-                    indicatorY + 8,
-                    0xFF50555D
+                    indicatorX + 7,
+                    indicatorY + 7,
+                    0xFF4A4F57
             );
         }
     }
 
-    /*
-     * ============================================================
-     * SETTINGS PANEL
-     * ============================================================
-     */
+    /* =========================
+       SETTINGS
+       ========================= */
 
     private void drawSettings(
             Module module,
@@ -540,74 +531,81 @@ public class ClickGuiScreen extends GuiScreen {
             return;
         }
 
-        int x =
-                windowX
-                        + SIDEBAR_WIDTH
-                        + 205;
-
-        int y =
-                windowY + TOPBAR_HEIGHT + 15;
-
-        int width =
-                WINDOW_WIDTH
-                        - SIDEBAR_WIDTH
-                        - 220;
-
         /*
-         * Settings background
+         * Settings panel is a compact
+         * overlay on the right side.
          */
 
+        int width = 145;
+
+        int x =
+                windowX
+                        + WINDOW_WIDTH
+                        - width
+                        - 7;
+
+        int y =
+                windowY
+                        + HEADER_HEIGHT
+                        + 7;
+
         drawRect(
-                x - 8,
-                y - 8,
-                x + width + 8,
-                windowY + WINDOW_HEIGHT - 10,
-                SETTING_BG
+                x,
+                y,
+                x + width,
+                windowY + WINDOW_HEIGHT - 7,
+                SETTINGS
+        );
+
+        drawOutline(
+                x,
+                y,
+                x + width,
+                windowY + WINDOW_HEIGHT - 7,
+                BORDER
         );
 
         fontRendererObj.drawString(
                 module.getName(),
-                x,
-                y,
+                x + 9,
+                y + 10,
                 TEXT
         );
 
         fontRendererObj.drawString(
-                "Settings",
-                x,
-                y + 15,
+                "SETTINGS",
+                x + 9,
+                y + 22,
                 TEXT_MUTED
         );
 
-        y += 35;
+        y += 36;
 
         for (Setting<?> setting :
                 module.getSettings()) {
 
             drawSetting(
                     setting,
-                    x,
+                    x + 9,
                     y,
-                    width,
+                    width - 18,
                     mouseX,
                     mouseY
             );
 
-            y += 38;
+            y += 37;
 
             if (y >
-                    windowY + WINDOW_HEIGHT - 35) {
+                    windowY + WINDOW_HEIGHT - 30) {
 
                 break;
             }
         }
     }
 
-    /*
-     * ============================================================
-     * SETTINGS
-     * ============================================================
-     */
+    /* =========================
+       SETTING DRAW
+       ========================= */
 
     private void drawSetting(
             Setting<?> setting,
@@ -622,26 +620,24 @@ public class ClickGuiScreen extends GuiScreen {
                 isHover(
                         mouseX,
                         mouseY,
-                        x,
-                        y,
-                        width,
-                        32
+                        x - 3,
+                        y - 3,
+                        width + 6,
+                        30
                 );
 
         if (hovered) {
 
             drawRect(
-                    x - 4,
-                    y - 2,
-                    x + width + 4,
-                    y + 32,
+                    x - 3,
+                    y - 3,
+                    x + width + 3,
+                    y + 27,
                     0xFF20242A
             );
         }
 
-        /*
-         * Boolean
-         */
+        /* Boolean */
 
         if (setting instanceof BooleanSetting) {
 
@@ -651,7 +647,7 @@ public class ClickGuiScreen extends GuiScreen {
             fontRendererObj.drawString(
                     bs.getName(),
                     x,
-                    y + 10,
+                    y + 7,
                     TEXT_SECONDARY
             );
 
@@ -667,7 +663,7 @@ public class ClickGuiScreen extends GuiScreen {
             fontRendererObj.drawString(
                     value,
                     x + width - valueWidth,
-                    y + 10,
+                    y + 7,
                     bs.getValue()
                             ? ACCENT
                             : TEXT_MUTED
@@ -676,9 +672,7 @@ public class ClickGuiScreen extends GuiScreen {
             return;
         }
 
-        /*
-         * Mode
-         */
+        /* Mode */
 
         if (setting instanceof ModeSetting) {
 
@@ -688,14 +682,12 @@ public class ClickGuiScreen extends GuiScreen {
             fontRendererObj.drawString(
                     ms.getName(),
                     x,
-                    y + 10,
+                    y + 7,
                     TEXT_SECONDARY
             );
 
             String value =
-                    String.valueOf(
-                            ms.getValue()
-                    );
+                    String.valueOf(ms.getValue());
 
             int valueWidth =
                     fontRendererObj
@@ -704,16 +696,14 @@ public class ClickGuiScreen extends GuiScreen {
             fontRendererObj.drawString(
                     value,
                     x + width - valueWidth,
-                    y + 10,
+                    y + 7,
                     TEXT
             );
 
             return;
         }
 
-        /*
-         * Number
-         */
+        /* Number */
 
         if (setting instanceof NumberSetting) {
 
@@ -723,7 +713,7 @@ public class ClickGuiScreen extends GuiScreen {
             fontRendererObj.drawString(
                     number.getName(),
                     x,
-                    y + 2,
+                    y,
                     TEXT_SECONDARY
             );
 
@@ -739,25 +729,18 @@ public class ClickGuiScreen extends GuiScreen {
             fontRendererObj.drawString(
                     value,
                     x + width - valueWidth,
-                    y + 2,
+                    y,
                     TEXT
             );
 
-            int barX =
-                    x;
-
-            int barY =
-                    y + 22;
-
-            int barWidth =
-                    width;
+            int barY = y + 17;
 
             drawRect(
-                    barX,
+                    x,
                     barY,
-                    barX + barWidth,
+                    x + width,
                     barY + 3,
-                    SLIDER_BG
+                    SLIDER
             );
 
             double range =
@@ -786,26 +769,21 @@ public class ClickGuiScreen extends GuiScreen {
 
             int fill =
                     (int)
-                            (
-                                    percent
-                                            * barWidth
-                            );
+                            (percent * width);
 
             drawRect(
-                    barX,
+                    x,
                     barY,
-                    barX + fill,
+                    x + fill,
                     barY + 3,
                     ACCENT
             );
         }
     }
 
-    /*
-     * ============================================================
-     * MOUSE
-     * ============================================================
-     */
+    /* =========================
+       CLICK
+       ========================= */
 
     @Override
     protected void mouseClicked(
@@ -815,7 +793,7 @@ public class ClickGuiScreen extends GuiScreen {
     ) throws IOException {
 
         /*
-         * Window title dragging
+         * Header drag
          */
 
         if (isHover(
@@ -824,7 +802,7 @@ public class ClickGuiScreen extends GuiScreen {
                 windowX,
                 windowY,
                 WINDOW_WIDTH,
-                TOPBAR_HEIGHT
+                HEADER_HEIGHT
         )) {
 
             if (mouseButton == 0) {
@@ -846,10 +824,10 @@ public class ClickGuiScreen extends GuiScreen {
          */
 
         int categoryX =
-                windowX + 8;
+                windowX + 7;
 
         int categoryY =
-                windowY + TOPBAR_HEIGHT + 12;
+                windowY + HEADER_HEIGHT + 10;
 
         for (int i = 0;
              i < categories.size();
@@ -860,18 +838,17 @@ public class ClickGuiScreen extends GuiScreen {
                     mouseY,
                     categoryX,
                     categoryY,
-                    SIDEBAR_WIDTH - 16,
-                    30
+                    SIDEBAR_WIDTH - 14,
+                    28
             )) {
 
                 selectedCategory = i;
-
                 selectedModule = null;
 
                 return;
             }
 
-            categoryY += 34;
+            categoryY += 32;
         }
 
         /*
@@ -885,51 +862,67 @@ public class ClickGuiScreen extends GuiScreen {
         Category category =
                 categories.get(selectedCategory);
 
-        int contentX =
-                windowX + SIDEBAR_WIDTH + 15;
+        int x =
+                windowX
+                        + SIDEBAR_WIDTH
+                        + 14;
 
-        int contentY =
-                windowY + TOPBAR_HEIGHT + 47;
+        int y =
+                windowY
+                        + HEADER_HEIGHT
+                        + 43;
 
-        int contentWidth =
+        int availableWidth =
                 WINDOW_WIDTH
                         - SIDEBAR_WIDTH
-                        - 30;
+                        - 28;
+
+        int columnGap = 6;
+
+        int cardWidth =
+                (availableWidth - columnGap) / 2;
 
         ArrayList<Module> modules =
                 Client.INSTANCE.manager
                         .getModulesByCategory(category);
 
-        for (Module module : modules) {
+        for (int i = 0; i < modules.size(); i++) {
+
+            Module module = modules.get(i);
+
+            int column = i % 2;
+            int row = i / 2;
+
+            int cardX =
+                    column == 0
+                            ? x
+                            : x + cardWidth + columnGap;
+
+            int cardY =
+                    y + row *
+                            (CARD_HEIGHT + CARD_GAP);
 
             if (isHover(
                     mouseX,
                     mouseY,
-                    contentX,
-                    contentY,
-                    contentWidth,
+                    cardX,
+                    cardY,
+                    cardWidth,
                     CARD_HEIGHT
             )) {
 
                 if (mouseButton == 0) {
 
                     module.toggle();
+                    selectedModule = module;
 
-                    selectedModule =
-                            module;
-                }
+                } else if (mouseButton == 1) {
 
-                if (mouseButton == 1) {
-
-                    selectedModule =
-                            module;
+                    selectedModule = module;
                 }
 
                 return;
             }
-
-            contentY +=
-                    CARD_HEIGHT + CARD_GAP;
         }
 
         /*
@@ -953,11 +946,9 @@ public class ClickGuiScreen extends GuiScreen {
         );
     }
 
-    /*
-     * ============================================================
-     * SETTINGS CLICK
-     * ============================================================
-     */
+    /* =========================
+       SETTINGS CLICK
+       ========================= */
 
     private void clickSettings(
             Module module,
@@ -972,20 +963,22 @@ public class ClickGuiScreen extends GuiScreen {
             return;
         }
 
+        int panelWidth = 145;
+
         int x =
                 windowX
-                        + SIDEBAR_WIDTH
-                        + 205;
+                        + WINDOW_WIDTH
+                        - panelWidth
+                        - 7
+                        + 9;
 
         int y =
                 windowY
-                        + TOPBAR_HEIGHT
-                        + 50;
+                        + HEADER_HEIGHT
+                        + 43;
 
         int width =
-                WINDOW_WIDTH
-                        - SIDEBAR_WIDTH
-                        - 220;
+                panelWidth - 18;
 
         for (Setting<?> setting :
                 module.getSettings()) {
@@ -993,10 +986,10 @@ public class ClickGuiScreen extends GuiScreen {
             if (isHover(
                     mouseX,
                     mouseY,
-                    x - 4,
-                    y - 2,
-                    width + 8,
-                    32
+                    x - 3,
+                    y - 3,
+                    width + 6,
+                    30
             )) {
 
                 if (setting instanceof BooleanSetting
@@ -1031,15 +1024,13 @@ public class ClickGuiScreen extends GuiScreen {
                 }
             }
 
-            y += 38;
+            y += 37;
         }
     }
 
-    /*
-     * ============================================================
-     * DRAG
-     * ============================================================
-     */
+    /* =========================
+       DRAG
+       ========================= */
 
     @Override
     protected void mouseClickMove(
@@ -1062,15 +1053,17 @@ public class ClickGuiScreen extends GuiScreen {
         if (draggingSlider != null
                 && clickedMouseButton == 0) {
 
+            int panelWidth = 145;
+
             int sliderX =
                     windowX
-                            + SIDEBAR_WIDTH
-                            + 205;
+                            + WINDOW_WIDTH
+                            - panelWidth
+                            - 7
+                            + 9;
 
             int sliderWidth =
-                    WINDOW_WIDTH
-                            - SIDEBAR_WIDTH
-                            - 220;
+                    panelWidth - 18;
 
             setSliderValue(
                     mouseX,
@@ -1087,11 +1080,9 @@ public class ClickGuiScreen extends GuiScreen {
         );
     }
 
-    /*
-     * ============================================================
-     * SLIDER
-     * ============================================================
-     */
+    /* =========================
+       SLIDER
+       ========================= */
 
     private void setSliderValue(
             int mouseX,
@@ -1118,11 +1109,11 @@ public class ClickGuiScreen extends GuiScreen {
 
         double rawValue =
                 draggingSlider.getMin()
-                        + percent
-                        * (
-                        draggingSlider.getMax()
-                                - draggingSlider.getMin()
-                );
+                        + percent *
+                        (
+                                draggingSlider.getMax()
+                                        - draggingSlider.getMin()
+                        );
 
         double increment =
                 draggingSlider.getIncrement();
@@ -1164,11 +1155,9 @@ public class ClickGuiScreen extends GuiScreen {
         draggingSlider.setValue(value);
     }
 
-    /*
-     * ============================================================
-     * UPDATE
-     * ============================================================
-     */
+    /* =========================
+       UPDATE
+       ========================= */
 
     @Override
     public void updateScreen() {
@@ -1176,7 +1165,6 @@ public class ClickGuiScreen extends GuiScreen {
         if (!Mouse.isButtonDown(0)) {
 
             draggingWindow = false;
-
             draggingSlider = null;
         }
 
@@ -1210,10 +1198,6 @@ public class ClickGuiScreen extends GuiScreen {
         windowX += moveX;
         windowY += moveY;
 
-        /*
-         * Keep window on screen.
-         */
-
         if (windowX < 0) {
             windowX = 0;
         }
@@ -1235,11 +1219,9 @@ public class ClickGuiScreen extends GuiScreen {
         }
     }
 
-    /*
-     * ============================================================
-     * KEYBOARD
-     * ============================================================
-     */
+    /* =========================
+       KEYBOARD
+       ========================= */
 
     @Override
     protected void keyTyped(
@@ -1254,22 +1236,18 @@ public class ClickGuiScreen extends GuiScreen {
         }
     }
 
-    /*
-     * ============================================================
-     * GUI
-     * ============================================================
-     */
+    /* =========================
+       GUI
+       ========================= */
 
     @Override
     public boolean doesGuiPauseGame() {
         return false;
     }
 
-    /*
-     * ============================================================
-     * HELPERS
-     * ============================================================
-     */
+    /* =========================
+       HELPERS
+       ========================= */
 
     private void drawOutline(
             int x1,
