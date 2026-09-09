@@ -11,145 +11,460 @@ public class ClickGuiScreen extends GuiScreen {
 
     private int x = 80;
     private int y = 50;
+
     private Category category = Category.Client;
-    
+
     private String searchQuery = "";
     private boolean searchFocused = false;
 
+    private Module selectedModule = null;
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawRect(0, 0, width, height, 0x77000000);
-        
-        drawRect(x, y, x + 510, y + 335, 0xFF121214);
-        drawRect(x, y, x + 130, y + 335, 0xFF18181C);
-        drawRect(x + 130, y, x + 131, y + 335, 0xFF242428);
 
-        this.fontRenderer.drawString("NoneClient", x + 16, y + 16, 0xFFFFFFFF);
+        drawRect(
+                0,
+                0,
+                width,
+                height,
+                0x77000000
+        );
 
-        int cy = y + 45;
+        drawRect(
+                x,
+                y,
+                x + 510,
+                y + 335,
+                0xFF111214
+        );
+
+        drawRect(
+                x,
+                y,
+                x + 130,
+                y + 335,
+                0xFF181A1D
+        );
+
+        drawRect(
+                x + 130,
+                y,
+                x + 131,
+                y + 335,
+                0xFF282B30
+        );
+
+        fontRenderer.drawString(
+                "NoneClient",
+                x + 15,
+                y + 15,
+                0xFFFFFFFF
+        );
+
+        fontRenderer.drawString(
+                "1.12.2",
+                x + 15,
+                y + 27,
+                0xFF686D75
+        );
+
+        int cy = y + 48;
+
         for (Category c : Category.values()) {
-            boolean isCurrent = (c == category);
-            
-            if (isCurrent) {
-                drawRect(x + 10, cy, x + 120, cy + 22, 0xFF24242A);
-                drawRect(x + 10, cy, x + 12, cy + 22, 0xFF3880FF);
+
+            boolean selected = c == category;
+
+            if (selected) {
+
+                drawRect(
+                        x + 8,
+                        cy,
+                        x + 120,
+                        cy + 24,
+                        0xFF24282E
+                );
+
+                drawRect(
+                        x + 8,
+                        cy,
+                        x + 10,
+                        cy + 24,
+                        0xFF4C9AFF
+                );
+
+            } else if (
+                    mouseX >= x + 8
+                    && mouseX <= x + 120
+                    && mouseY >= cy
+                    && mouseY <= cy + 24
+            ) {
+
+                drawRect(
+                        x + 8,
+                        cy,
+                        x + 120,
+                        cy + 24,
+                        0xFF1F2227
+                );
             }
 
-            this.fontRenderer.drawString(
+            fontRenderer.drawString(
                     c.name(),
-                    x + 20,
-                    cy + 7,
-                    isCurrent ? 0xFFFFFFFF : 0xFF7A7A85
+                    x + 19,
+                    cy + 8,
+                    selected
+                            ? 0xFFFFFFFF
+                            : 0xFF858A92
             );
-            cy += 28;
+
+            cy += 29;
         }
 
         int sx = x + 145;
         int sy = y + 14;
-        drawRect(sx, sy, sx + 340, sy + 22, searchFocused ? 0xFF202024 : 0xFF18181C);
-        
-        int searchBorder = searchFocused ? 0xFF3880FF : 0xFF242428;
-        drawRect(sx, sy, sx + 340, sy + 1, searchBorder);
-        drawRect(sx, sy + 21, sx + 340, sy + 22, searchBorder);
-        drawRect(sx, sy, sx + 1, sy + 22, searchBorder);
-        drawRect(sx + 339, sy, sx + 340, sy + 22, searchBorder);
+
+        drawRect(
+                sx,
+                sy,
+                sx + 340,
+                sy + 23,
+                0xFF191B1F
+        );
+
+        drawRect(
+                sx,
+                sy,
+                sx + 340,
+                sy + 1,
+                searchFocused
+                        ? 0xFF4C9AFF
+                        : 0xFF292C31
+        );
+
+        drawRect(
+                sx,
+                sy + 22,
+                sx + 340,
+                sy + 23,
+                0xFF292C31
+        );
+
+        drawRect(
+                sx,
+                sy,
+                sx + 1,
+                sy + 23,
+                0xFF292C31
+        );
+
+        drawRect(
+                sx + 339,
+                sy,
+                sx + 340,
+                sy + 23,
+                0xFF292C31
+        );
 
         if (searchQuery.isEmpty() && !searchFocused) {
-            this.fontRenderer.drawString("Search modules...", sx + 8, sy + 7, 0xFF55555F);
+
+            fontRenderer.drawString(
+                    "Search modules...",
+                    sx + 8,
+                    sy + 8,
+                    0xFF666A70
+            );
+
         } else {
-            this.fontRenderer.drawString(searchQuery + (searchFocused && System.currentTimeMillis() % 1000 < 500 ? "_" : ""), sx + 8, sy + 7, 0xFFEEEEEE);
+
+            String text = searchQuery;
+
+            if (
+                    searchFocused
+                    && System.currentTimeMillis() % 1000 < 500
+            ) {
+                text += "_";
+            }
+
+            fontRenderer.drawString(
+                    text,
+                    sx + 8,
+                    sy + 8,
+                    0xFFE8E8E8
+            );
         }
 
         int my = y + 50;
-        for (Module module : Client.manager.getModulesByCategory(category)) {
-            if (!searchQuery.isEmpty() && !module.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
+
+        for (
+                Module module :
+                Client.manager.getModulesByCategory(category)
+        ) {
+
+            if (
+                    !searchQuery.isEmpty()
+                    && !module.getName()
+                    .toLowerCase()
+                    .contains(searchQuery.toLowerCase())
+            ) {
                 continue;
             }
 
             boolean enabled = module.isEnabled();
-            
-            drawRect(x + 145, my, x + 495, my + 40, enabled ? 0xFF1D2433 : 0xFF18181C);
-            
-            int borderColor = enabled ? 0xFF2B4066 : 0xFF242428;
-            drawRect(x + 145, my, x + 495, my + 1, borderColor);
-            drawRect(x + 145, my + 39, x + 495, my + 40, borderColor);
-            drawRect(x + 145, my, x + 146, my + 40, borderColor);
-            drawRect(x + 494, my, x + 495, my + 40, borderColor);
 
-            this.fontRenderer.drawString(
-                    module.getName(),
-                    x + 160,
-                    my + 16,
-                    enabled ? 0xFF3880FF : 0xFFEEEEEE
+            boolean hovered =
+                    mouseX >= x + 145
+                    && mouseX <= x + 495
+                    && mouseY >= my
+                    && mouseY <= my + 40;
+
+            int background;
+
+            if (enabled) {
+
+                background = hovered
+                        ? 0xFF222D3B
+                        : 0xFF1D2632;
+
+            } else {
+
+                background = hovered
+                        ? 0xFF202328
+                        : 0xFF181A1E;
+            }
+
+            drawRect(
+                    x + 145,
+                    my,
+                    x + 495,
+                    my + 40,
+                    background
             );
 
-            int tX = x + 455;
-            int tY = my + 14;
-            int tWidth = 26;
-            int tHeight = 12;
+            drawRect(
+                    x + 145,
+                    my,
+                    x + 495,
+                    my + 1,
+                    enabled
+                            ? 0xFF31547E
+                            : 0xFF292C31
+            );
 
-            drawRect(tX, tY, tX + tWidth, tY + tHeight, enabled ? 0xFF3880FF : 0xFF2D2D35);
-            
+            drawRect(
+                    x + 145,
+                    my + 39,
+                    x + 495,
+                    my + 40,
+                    0xFF25282D
+            );
+
+            if (module == selectedModule) {
+
+                drawRect(
+                        x + 145,
+                        my,
+                        x + 148,
+                        my + 40,
+                        0xFF4C9AFF
+                );
+            }
+
+            fontRenderer.drawString(
+                    module.getName(),
+                    x + 160,
+                    my + 10,
+                    enabled
+                            ? 0xFF4C9AFF
+                            : 0xFFE8E8E8
+            );
+
+            String description =
+                    module.getDescription();
+
+            if (
+                    description != null
+                    && !description.isEmpty()
+                    && !description.equals("- - -")
+            ) {
+
+                if (description.length() > 35) {
+
+                    description =
+                            description.substring(0, 35)
+                            + "...";
+                }
+
+                fontRenderer.drawString(
+                        description,
+                        x + 160,
+                        my + 24,
+                        0xFF666B73
+                );
+            }
+
+            int tx = x + 455;
+            int ty = my + 14;
+
+            drawRect(
+                    tx,
+                    ty,
+                    tx + 26,
+                    ty + 12,
+                    enabled
+                            ? 0xFF4C9AFF
+                            : 0xFF30343A
+            );
+
             if (enabled) {
-                drawRect(tX + tWidth - 10, tY - 1, tX + tWidth, tY + tHeight + 1, 0xFFFFFFFF);
+
+                drawRect(
+                        tx + 16,
+                        ty - 1,
+                        tx + 26,
+                        ty + 13,
+                        0xFFFFFFFF
+                );
+
             } else {
-                drawRect(tX, tY - 1, tX + 10, tY + tHeight + 1, 0xFF7A7A85);
+
+                drawRect(
+                        tx,
+                        ty - 1,
+                        tx + 10,
+                        ty + 13,
+                        0xFF777C84
+                );
             }
 
             my += 48;
         }
 
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.drawScreen(
+                mouseX,
+                mouseY,
+                partialTicks
+        );
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+    protected void mouseClicked(
+            int mouseX,
+            int mouseY,
+            int button
+    ) throws IOException {
+
         int sx = x + 145;
         int sy = y + 14;
-        searchFocused = (mouseX >= sx && mouseX <= sx + 340 && mouseY >= sy && mouseY <= sy + 22);
 
-        int cy = y + 45;
+        searchFocused =
+                mouseX >= sx
+                && mouseX <= sx + 340
+                && mouseY >= sy
+                && mouseY <= sy + 23;
+
+        int cy = y + 48;
+
         for (Category c : Category.values()) {
-            if (mouseX >= x + 10 && mouseX <= x + 120 && mouseY >= cy && mouseY <= cy + 22) {
+
+            if (
+                    mouseX >= x + 8
+                    && mouseX <= x + 120
+                    && mouseY >= cy
+                    && mouseY <= cy + 24
+            ) {
+
                 category = c;
+                selectedModule = null;
                 return;
             }
-            cy += 28;
+
+            cy += 29;
         }
 
         int my = y + 50;
-        for (Module module : Client.manager.getModulesByCategory(category)) {
-            if (!searchQuery.isEmpty() && !module.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
+
+        for (
+                Module module :
+                Client.manager.getModulesByCategory(category)
+        ) {
+
+            if (
+                    !searchQuery.isEmpty()
+                    && !module.getName()
+                    .toLowerCase()
+                    .contains(searchQuery.toLowerCase())
+            ) {
                 continue;
             }
 
-            if (mouseX >= x + 145 && mouseX <= x + 495 && mouseY >= my && mouseY <= my + 40) {
+            if (
+                    mouseX >= x + 145
+                    && mouseX <= x + 495
+                    && mouseY >= my
+                    && mouseY <= my + 40
+            ) {
+
+                selectedModule = module;
+
                 module.toggle();
+
                 return;
             }
+
             my += 48;
         }
 
-        super.mouseClicked(mouseX, mouseY, button);
+        super.mouseClicked(
+                mouseX,
+                mouseY,
+                button
+        );
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    protected void keyTyped(
+            char typedChar,
+            int keyCode
+    ) throws IOException {
+
         if (searchFocused) {
-            if (keyCode == 1) { 
+
+            if (keyCode == 1) {
+
                 searchFocused = false;
-            } else if (keyCode == 14) { 
+
+            } else if (keyCode == 14) {
+
                 if (!searchQuery.isEmpty()) {
-                    searchQuery = searchQuery.substring(0, searchQuery.length() - 1);
+
+                    searchQuery =
+                            searchQuery.substring(
+                                    0,
+                                    searchQuery.length() - 1
+                            );
                 }
-            } else if (ChatAllowedCharacters.isAllowedCharacter(typedChar)) {
+
+            } else if (
+                    ChatAllowedCharacters
+                    .isAllowedCharacter(typedChar)
+            ) {
+
                 searchQuery += typedChar;
             }
+
         } else {
-            if (keyCode == 1) { 
+
+            if (keyCode == 1) {
+
                 mc.displayGuiScreen(null);
+
+                return;
             }
-            super.keyTyped(typedChar, keyCode);
+
+            super.keyTyped(
+                    typedChar,
+                    keyCode
+            );
         }
     }
 
