@@ -3,7 +3,6 @@ package net.minecraft.client.gui;
 import com.isacofff.clientbase.Category;
 import com.isacofff.clientbase.Client;
 import com.isacofff.clientbase.modules.Module;
-import org.lwjgl.input.Keyboard;
 import net.minecraft.util.ChatAllowedCharacters;
 
 import java.io.IOException;
@@ -25,7 +24,7 @@ public class ClickGuiScreen extends GuiScreen {
         drawRect(x, y, x + 130, y + 335, 0xFF18181C);
         drawRect(x + 130, y, x + 131, y + 335, 0xFF242428);
 
-        fontRendererObj.drawString("NoneClient", x + 16, y + 16, 0xFFFFFFFF);
+        this.fontRenderer.drawString("NoneClient", x + 16, y + 16, 0xFFFFFFFF);
 
         int cy = y + 45;
         for (Category c : Category.values()) {
@@ -36,7 +35,7 @@ public class ClickGuiScreen extends GuiScreen {
                 drawRect(x + 10, cy, x + 12, cy + 22, 0xFF3880FF);
             }
 
-            fontRendererObj.drawString(
+            this.fontRenderer.drawString(
                     c.name(),
                     x + 20,
                     cy + 7,
@@ -56,9 +55,9 @@ public class ClickGuiScreen extends GuiScreen {
         drawRect(sx + 339, sy, sx + 340, sy + 22, searchBorder);
 
         if (searchQuery.isEmpty() && !searchFocused) {
-            fontRendererObj.drawString("Search modules...", sx + 8, sy + 7, 0xFF55555F);
+            this.fontRenderer.drawString("Search modules...", sx + 8, sy + 7, 0xFF55555F);
         } else {
-            fontRendererObj.drawString(searchQuery + (searchFocused && System.currentTimeMillis() % 1000 < 500 ? "_" : ""), sx + 8, sy + 7, 0xFFEEEEEE);
+            this.fontRenderer.drawString(searchQuery + (searchFocused && System.currentTimeMillis() % 1000 < 500 ? "_" : ""), sx + 8, sy + 7, 0xFFEEEEEE);
         }
 
         int my = y + 50;
@@ -77,7 +76,7 @@ public class ClickGuiScreen extends GuiScreen {
             drawRect(x + 145, my, x + 146, my + 40, borderColor);
             drawRect(x + 494, my, x + 495, my + 40, borderColor);
 
-            fontRendererObj.drawString(
+            this.fontRenderer.drawString(
                     module.getName(),
                     x + 160,
                     my + 16,
@@ -137,9 +136,9 @@ public class ClickGuiScreen extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if (searchFocused) {
-            if (keyCode == Keyboard.KEY_ESCAPE) {
+            if (keyCode == 1) { 
                 searchFocused = false;
-            } else if (keyCode == Keyboard.KEY_BACK) {
+            } else if (keyCode == 14) { 
                 if (!searchQuery.isEmpty()) {
                     searchQuery = searchQuery.substring(0, searchQuery.length() - 1);
                 }
@@ -147,7 +146,7 @@ public class ClickGuiScreen extends GuiScreen {
                 searchQuery += typedChar;
             }
         } else {
-            if (keyCode == 1) {
+            if (keyCode == 1) { 
                 mc.displayGuiScreen(null);
             }
             super.keyTyped(typedChar, keyCode);
