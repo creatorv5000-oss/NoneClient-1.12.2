@@ -25,8 +25,8 @@ public void drawScreen(int mouseX, int mouseY, float partialTicks) {
     drawRect(x, y, x + 130, y + 335, 0xFF181A1D);
     drawRect(x + 130, y, x + 131, y + 335, 0xFF282B30);
 
-    this.fontRenderer.drawString("NoneClient", x + 15, y + 15, 0xFFFFFFFF);
-    this.fontRenderer.drawString("1.12.2", x + 15, y + 27, 0xFF686D75);
+    this.fontrenderer.drawString("NoneClient", x + 15, y + 15, 0xFFFFFFFF);
+    this.fontrenderer.drawString("1.12.2", x + 15, y + 27, 0xFF686D75);
 
     int cy = y + 48;
 
