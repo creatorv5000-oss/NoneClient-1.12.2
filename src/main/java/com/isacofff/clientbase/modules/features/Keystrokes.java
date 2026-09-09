@@ -9,7 +9,7 @@ import net.minecraft.client.gui.ScaledResolution;
 
 public class Keystrokes extends Module {
 
-```
+
 private final Minecraft mc = Minecraft.getMinecraft();
 
 public Keystrokes() {
@@ -94,6 +94,6 @@ private void drawKey(
             0xFFFFFFFF
     );
 }
-```
+
 
 }
