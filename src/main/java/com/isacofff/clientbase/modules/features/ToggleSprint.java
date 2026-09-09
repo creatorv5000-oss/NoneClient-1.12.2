@@ -17,8 +17,8 @@ public class ToggleSprint extends Module {
     @Override
     public void onUpdate() {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.thePlayer != null && mc.thePlayer.onGround) {
-            mc.thePlayer.setSprinting(true);
+        if (mc.player != null && mc.player.onGround) {
+            mc.player.setSprinting(true);
         }
     }
 }
