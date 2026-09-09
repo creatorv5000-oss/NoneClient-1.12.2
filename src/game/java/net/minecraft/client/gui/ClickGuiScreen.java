@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class ClickGuiScreen extends GuiScreen {
 
-```
 private int x = 80;
 private int y = 50;
 private Category category = Category.Client;
