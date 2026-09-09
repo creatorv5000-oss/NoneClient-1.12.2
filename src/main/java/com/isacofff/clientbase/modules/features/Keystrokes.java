@@ -1,11 +1,12 @@
+
 package com.isacofff.clientbase.modules.features;
 
 import com.isacofff.clientbase.Category;
 import com.isacofff.clientbase.modules.Module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
 
 public class Keystrokes extends Module {
@@ -33,9 +34,15 @@ public class Keystrokes extends Module {
         int size = 24;
         int gap = 2;
 
-        drawKey(font, "W", x + size + gap, y, Keyboard.isKeyDown(Keyboard.KEY_W));
-        drawKey(font, "A", x, y + size + gap, Keyboard.isKeyDown(Keyboard.KEY_A));
-        drawKey(font, "S", x + size + gap, y + size + gap, Keyboard.isKeyDown(Keyboard.KEY_S));
+        drawKey(font, "W", x + size + gap, y,
+                Keyboard.isKeyDown(Keyboard.KEY_W));
+
+        drawKey(font, "A", x, y + size + gap,
+                Keyboard.isKeyDown(Keyboard.KEY_A));
+
+        drawKey(font, "S", x + size + gap, y + size + gap,
+                Keyboard.isKeyDown(Keyboard.KEY_S));
+
         drawKey(font, "D", x + (size + gap) * 2, y + size + gap,
                 Keyboard.isKeyDown(Keyboard.KEY_D));
     }
@@ -43,9 +50,16 @@ public class Keystrokes extends Module {
     private void drawKey(FontRenderer font, String text, int x, int y, boolean pressed) {
         int background = pressed ? 0xFF555555 : 0xAA222222;
 
-        GuiHelper.drawRect(x, y, x + 24, y + 24, background);
+        Gui.drawRect(
+                x,
+                y,
+                x + 24,
+                y + 24,
+                background
+        );
 
         int textWidth = font.getStringWidth(text);
+
         font.drawString(
                 text,
                 x + (24 - textWidth) / 2,
@@ -54,3 +68,4 @@ public class Keystrokes extends Module {
         );
     }
 }
+```
