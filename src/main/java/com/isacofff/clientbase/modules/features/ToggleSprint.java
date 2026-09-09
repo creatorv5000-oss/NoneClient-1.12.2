@@ -23,9 +23,3 @@ public class ToggleSprint extends Module {
         }
     }
 }
-
-Then run:
-
-./gradlew build
-
-Don't change any other files yet. Send me the next build result.
