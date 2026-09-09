@@ -27,12 +27,20 @@ jobs:
       - name: Build
         run: ./gradlew build
 
-      - name: Upload build files
+      - name: Make EPK
+        run: chmod +x CompileEPK.sh && ./CompileEPK.sh
+
+      - name: Build JavaScript
+        run: chmod +x CompileJS.sh && ./CompileJS.sh
+
+      - name: Make Offline Client
+        run: chmod +x MakeOfflineDownload.sh && ./MakeOfflineDownload.sh
+
+      - name: Upload NoneClient
         uses: actions/upload-artifact@v4
         with:
-          name: NoneClient-build
+          name: NoneClient
           path: |
-            build/libs/**
-            target/**
-            **/*.epk
-            **/*.js
+            javascript/*.html
+            javascript/classes.js
+            javascript/assets.epk
