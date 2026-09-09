@@ -7,14 +7,11 @@ import net.minecraft.client.Minecraft;
 
 public class FullBright extends Module {
 
-    public Setting.NumberSetting gamma = new Setting.NumberSetting("Gamma", 1000,1,1000,1);
-
+    public Setting.NumberSetting gamma = new Setting.NumberSetting("Gamma", 1000, 1, 1000, 1);
 
     public FullBright() {
         super("Fullbright", Category.Render);
-
         this.description = "Changes the brightness of the world.";
-
         settings.add(gamma);
     }
 
