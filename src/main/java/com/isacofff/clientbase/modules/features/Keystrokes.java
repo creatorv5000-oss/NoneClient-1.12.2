@@ -20,7 +20,7 @@ public class Keystrokes extends Module {
     }
 
     public void render(ScaledResolution resolution) {
-        if (mc.Player == null) {
+        if (mc.player == null) {
             return;
         }
 
