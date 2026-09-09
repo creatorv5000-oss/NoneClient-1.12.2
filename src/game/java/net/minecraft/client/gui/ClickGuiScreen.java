@@ -3,6 +3,7 @@ package net.minecraft.client.gui;
 import com.isacofff.clientbase.Category;
 import com.isacofff.clientbase.Client;
 import com.isacofff.clientbase.modules.Module;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
 
 import java.io.IOException;
@@ -24,8 +25,8 @@ public class ClickGuiScreen extends GuiScreen {
         drawRect(x, y, x + 130, y + 335, 0xFF181A1D);
         drawRect(x + 130, y, x + 131, y + 335, 0xFF282B30);
 
-        this.mc.fontRenderer.drawString("NoneClient", x + 15, y + 15, 0xFFFFFFFF);
-        this.mc.fontRenderer.drawString("1.12.2", x + 15, y + 27, 0xFF686D75);
+        Minecraft.getMinecraft().fontRenderer.drawString("NoneClient", x + 15, y + 15, 0xFFFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawString("1.12.2", x + 15, y + 27, 0xFF686D75);
 
         int cy = y + 48;
 
@@ -38,7 +39,7 @@ public class ClickGuiScreen extends GuiScreen {
                 drawRect(x + 8, cy, x + 10, cy + 24, 0xFF4C9AFF);
             }
 
-            this.mc.fontRenderer.drawString(
+            Minecraft.getMinecraft().fontRenderer.drawString(
                     c.name(),
                     x + 19,
                     cy + 8,
@@ -72,7 +73,7 @@ public class ClickGuiScreen extends GuiScreen {
             text += "_";
         }
 
-        this.mc.fontRenderer.drawString(
+        Minecraft.getMinecraft().fontRenderer.drawString(
                 text,
                 sx + 8,
                 sy + 8,
@@ -111,7 +112,7 @@ public class ClickGuiScreen extends GuiScreen {
                     enabled ? 0xFF31547E : 0xFF292C31
             );
 
-            this.mc.fontRenderer.drawString(
+            Minecraft.getMinecraft().fontRenderer.drawString(
                     module.getName(),
                     x + 160,
                     my + 10,
@@ -126,7 +127,7 @@ public class ClickGuiScreen extends GuiScreen {
                     !description.equals("- - -")
             ) {
 
-                this.mc.fontRenderer.drawString(
+                Minecraft.getMinecraft().fontRenderer.drawString(
                         description,
                         x + 160,
                         my + 24,
