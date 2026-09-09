@@ -26,7 +26,7 @@ public class ArmorHUD extends Module {
         for (int i = 0; i < mc.player.inventory.armorInventory.size(); i++) {
             ItemStack armorStack = mc.player.inventory.armorInventory.get(i);
             
-            if (!armorStack.isEmpty()) {
+            if (armorStack != null && !armorStack.func_190926_b()) {
                 
             }
         }
