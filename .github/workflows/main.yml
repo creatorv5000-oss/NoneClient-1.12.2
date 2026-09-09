@@ -1,0 +1,38 @@
+name: Build NoneClient
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Upload build files
+        uses: actions/upload-artifact@v4
+        with:
+          name: NoneClient-build
+          path: |
+            build/libs/**
+            target/**
+            **/*.epk
+            **/*.js
