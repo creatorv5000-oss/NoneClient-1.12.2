@@ -3,7 +3,9 @@ package com.isacofff.clientbase.modules.features;
 import com.isacofff.clientbase.Category;
 import com.isacofff.clientbase.modules.Module;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Mouse;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,18 @@ public class CPS extends Module {
 
     protected final Minecraft mc = Minecraft.getMinecraft();
     private final List<Long> clicks = new ArrayList<>();
-    private boolean wasPressed = false;
+    private boolean listening = false;
+
+    private final AWTEventListener mouseListener = event -> {
+        if (event.getID() == MouseEvent.MOUSE_PRESSED) {
+            MouseEvent mouseEvent = (MouseEvent) event;
+            if (mouseEvent.getButton() == MouseEvent.BUTTON1) {
+                synchronized (clicks) {
+                    clicks.add(System.currentTimeMillis());
+                }
+            }
+        }
+    };
 
     public CPS() {
         super(
@@ -24,20 +37,27 @@ public class CPS extends Module {
     @Override
     public void onUpdate() {
         if (mc.player == null || mc.world == null) {
+            if (listening) {
+                Toolkit.getDefaultToolkit().removeAWTEventListener(mouseListener);
+                listening = false;
+            }
             return;
         }
 
-        boolean isPressed = Mouse.isButtonDown(0);
-        if (isPressed && !wasPressed) {
-            clicks.add(System.currentTimeMillis());
+        if (!listening) {
+            Toolkit.getDefaultToolkit().addAWTEventListener(mouseListener, 16L);
+            listening = true;
         }
-        wasPressed = isPressed;
 
         long time = System.currentTimeMillis();
-        clicks.removeIf(click -> time - click > 1000);
+        synchronized (clicks) {
+            clicks.removeIf(click -> time - click > 1000);
+        }
     }
 
     public int getCPS() {
-        return clicks.size();
+        synchronized (clicks) {
+            return clicks.size();
+        }
     }
 }
