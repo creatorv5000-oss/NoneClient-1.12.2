@@ -27,7 +27,7 @@ public class Manager {
         modules.add(new FullBright());
         modules.add(new ExampleModule());
         
-        // Register your active PvP suite features
+        // Register all your active PvP features
         modules.add(new ArmorHUD());
         modules.add(new CPS());
         modules.add(new Coordinates());
@@ -53,7 +53,6 @@ public class Manager {
     }
 
     public <T extends Module> T getModule(Class<T> classs) {
-
         for (Module m : modules) {
             if (classs.isInstance(m)) return classs.cast(m);
         }
