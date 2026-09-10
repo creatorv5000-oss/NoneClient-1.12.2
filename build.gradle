@@ -34,8 +34,3 @@ sourceSets {
 repositories {
     mavenCentral()
 }
-
-compileTeavmJava {
-    optimizationLevel = "ADVANCED"
-    stopOnErrors = true
-}
