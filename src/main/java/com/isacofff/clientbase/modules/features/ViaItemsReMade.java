@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.init.Items;
 import java.util.List;
 
-public class ViaItems extends Module {
+public class ViaItemsReMade extends Module {
 
     public ViaItems() {
         super("ViaItems", "Handles text styles and model translation for modern items.", Category.Render);
