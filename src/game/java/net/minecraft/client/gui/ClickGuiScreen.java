@@ -18,67 +18,61 @@ public class ClickGuiScreen extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        // Feather Client premium dark glass backing overlay panel layout
-        drawRect(0, 0, width, height, 0x440A0A0C);
+        // Lunar Client style semi-transparent dark backdrop shader overlay
+        drawRect(0, 0, width, height, 0x66000000);
 
-        // Core visual panels: Main Container Frame (530 width, 350 height)
-        drawRect(x, y, x + 530, y + 350, 0xDD121316); // Translucent Main Body
-        drawRect(x, y, x + 140, y + 350, 0xF016181C); // Left Sidebar Base Layer
+        // Core visual panels: Main Lunar Window Container Frame (540 width, 360 height)
+        drawRect(x, y, x + 540, y + 360, 0xFA1E1E24); // Dark-charcoal background main window
+        drawRect(x, y, x + 540, y + 42, 0xFF18181C);  // Upper branding navigation header bar
 
-        // Sleek subtle column dividing lines (1px)
-        drawRect(x + 140, y, x + 141, y + 350, 0x1F7F8C9D);
+        // Brand Typography: Clean Lunar Client header text layout
+        mc.fontRendererObj.drawString("Lunar Client", x + 16, y + 12, 0xFFFFFFFF);
+        mc.fontRendererObj.drawString("(1.12.2 / NoneClient)", x + 88, y + 13, 0x66FFFFFF);
 
-        // Brand Typography: Feather style minimal branding layout
-        Minecraft.getMinecraft().fontRendererObj.drawString("NoneClient", x + 18, y + 16, 0xFFFFFFFF);
-        Minecraft.getMinecraft().fontRendererObj.drawString("v1.12.2", x + 18, y + 28, 0x55FFFFFF);
-
-        int cy = y + 54;
-
-        // Render Tabs Sidebar List Loop Layer
-        for (Category c : Category.values()) {
-            boolean selected = c == category;
-
-            // Render modern flat hover accent bar blocks if selected
-            if (selected) {
-                drawRect(x + 10, cy, x + 130, cy + 22, 0x1A4C9AFF); // Soft highlight backing capsule
-                drawRect(x + 10, cy + 4, x + 12, cy + 18, 0xFF4C9AFF); // Left vertical micro accent pillar
-            }
-
-            Minecraft.getMinecraft().fontRendererObj.drawString(
-                    c.name(),
-                    x + 22,
-                    cy + 7,
-                    selected ? 0xFF4C9AFF : 0x88FFFFFF
-            );
-
-            cy += 26;
-        }
-
-        // Search Input Box Positioning Configurations
-        int sx = x + 155;
-        int sy = y + 16;
-
-        // Background input housing
-        drawRect(sx, sy, sx + 355, sy + 22, 0x33000000);
-        // Clean micro indicator active box underlines
-        drawRect(sx, sy + 21, sx + 355, sy + 22, searchFocused ? 0xFF4C9AFF : 0x22FFFFFF);
+        // Search Input Box (Lunar right-aligned capsule style setup)
+        int sx = x + 340;
+        int sy = y + 10;
+        drawRect(sx, sy, sx + 180, sy + 22, 0x44000000);
+        drawRect(sx, sy + 21, sx + 180, sy + 22, searchFocused ? 0xFF3887FF : 0x11FFFFFF);
 
         String text = searchQuery;
         if (text.isEmpty() && !searchFocused) {
-            text = "Search mods...";
+            text = "Search modules...";
         } else if (searchFocused && System.currentTimeMillis() % 1000 < 500) {
             text += "_";
         }
+        mc.fontRendererObj.drawString(text, sx + 8, sy + 7, searchQuery.isEmpty() ? 0x44FFFFFF : 0xCCFFFFFF);
 
-        Minecraft.getMinecraft().fontRendererObj.drawString(
-                text,
-                sx + 8,
-                sy + 7,
-                searchQuery.isEmpty() ? 0x44FFFFFF : 0xCCFFFFFF
-        );
+        // Render Tabs Horizontal Navigation Category Bar (Lunar top-row style)
+        int cx = x + 16;
+        int cy = y + 48;
 
-        // Main Module List Rendering Stream
-        int my = y + 54;
+        for (Category c : Category.values()) {
+            boolean selected = c == category;
+            int stringWidth = mc.fontRendererObj.getStringWidth(c.name());
+
+            // Render bottom highlight border lines underneath active categories
+            if (selected) {
+                drawRect(cx, cy + 18, cx + stringWidth, cy + 20, 0xFF3887FF);
+            }
+
+            mc.fontRendererObj.drawString(
+                    c.name(),
+                    cx,
+                    cy + 6,
+                    selected ? 0xFF3887FF : 0x88FFFFFF
+            );
+
+            cx += stringWidth + 24;
+        }
+
+        // Distinct separating border array mapping line
+        drawRect(x, y + 74, x + 540, y + 75, 0x11FFFFFF);
+
+        // Main Module Grid Section Layout
+        int mx = x + 20;
+        int my = y + 90;
+        int columnCount = 0;
 
         for (Module module : Client.manager.getModulesByCategory(category)) {
             if (!searchQuery.isEmpty() && !module.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
@@ -87,43 +81,38 @@ public class ClickGuiScreen extends GuiScreen {
 
             boolean enabled = module.isEnabled();
 
-            // Feather UI clean capsule grid frames layout
-            drawRect(x + 155, my, x + 510, my + 38, 0x22FFFFFF); // Soft outer cell glow mapping container
-            drawRect(x + 155, my, x + 156, my + 38, enabled ? 0xFF4C9AFF : 0x33FFFFFF); // Dynamic feature state highlights
+            // Lunar clean card cell housing mapping bounds
+            drawRect(mx, my, mx + 240, my + 46, 0x44000000);
+            drawRect(mx, my, mx + 3, my + 46, enabled ? 0xFF3887FF : 0x22FFFFFF);
 
-            // Module Label Text
-            Minecraft.getMinecraft().fontRendererObj.drawString(
-                    module.getName(),
-                    x + 168,
-                    my + 9,
-                    enabled ? 0xFFFFFFFF : 0xAAFFFFFF
-            );
+            // Module Label Text strings
+            mc.fontRendererObj.drawString(module.getName(), mx + 14, my + 10, enabled ? 0xFFFFFFFF : 0x99FFFFFF);
 
             String description = module.getDescription();
             if (description != null && !description.isEmpty() && !description.equals("- - -")) {
-                Minecraft.getMinecraft().fontRendererObj.drawString(
-                        description,
-                        x + 168,
-                        my + 22,
-                        0x44FFFFFF
-                );
+                mc.fontRendererObj.drawString(description, mx + 14, my + 24, 0x44FFFFFF);
             }
 
-            // High Tech Rounded Pill Switch Simulation Positioning
-            int tx = x + 465;
-            int ty = my + 14;
+            // Slider toggle positioning parameters
+            int tx = mx + 195;
+            int ty = my + 16;
+            drawRect(tx, ty, tx + 30, ty + 12, enabled ? 0xFF3887FF : 0x22FFFFFF);
 
-            // Render Switch Slider Background Housing Channel
-            drawRect(tx, ty, tx + 30, ty + 12, enabled ? 0x444C9AFF : 0x22FFFFFF);
-
-            // Render Active Thumb Slider Knobs
             if (enabled) {
-                drawRect(tx + 18, ty - 1, tx + 29, ty + 13, 0xFF4C9AFF);
+                drawRect(tx + 18, ty - 1, tx + 29, ty + 13, 0xFFFFFFFF);
             } else {
-                drawRect(tx + 1, ty - 1, tx + 12, ty + 13, 0x66FFFFFF);
+                drawRect(tx + 1, ty - 1, tx + 12, ty + 13, 0x55FFFFFF);
             }
 
-            my += 44;
+            // Multi-column row wrapper processing configurations
+            columnCount++;
+            if (columnCount >= 2) {
+                columnCount = 0;
+                mx = x + 20;
+                my += 58;
+            } else {
+                mx += 260;
+            }
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -131,33 +120,44 @@ public class ClickGuiScreen extends GuiScreen {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
-        int sx = x + 155;
-        int sy = y + 16;
+        int sx = x + 340;
+        int sy = y + 10;
+        searchFocused = mouseX >= sx && mouseX <= sx + 180 && mouseY >= sy && mouseY <= sy + 22;
 
-        searchFocused = mouseX >= sx && mouseX <= sx + 355 && mouseY >= sy && mouseY <= sy + 22;
-
-        int cy = y + 54;
+        int cx = x + 16;
+        int cy = y + 48;
 
         for (Category c : Category.values()) {
-            if (mouseX >= x + 10 && mouseX <= x + 130 && mouseY >= cy && mouseY <= cy + 22) {
+            int stringWidth = mc.fontRendererObj.getStringWidth(c.name());
+            if (mouseX >= cx && mouseX <= cx + stringWidth && mouseY >= cy && mouseY <= cy + 24) {
                 category = c;
                 return;
             }
-            cy += 26;
+            cx += stringWidth + 24;
         }
 
-        int my = y + 54;
+        int mx = x + 20;
+        int my = y + 90;
+        int columnCount = 0;
 
         for (Module module : Client.manager.getModulesByCategory(category)) {
             if (!searchQuery.isEmpty() && !module.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
                 continue;
             }
 
-            if (mouseX >= x + 155 && mouseX <= x + 510 && mouseY >= my && mouseY <= my + 38) {
+            if (mouseX >= mx && mouseX <= mx + 240 && mouseY >= my && mouseY <= my + 46) {
                 module.toggle();
                 return;
             }
-            my += 44;
+
+            columnCount++;
+            if (columnCount >= 2) {
+                columnCount = 0;
+                mx = x + 20;
+                my += 58;
+            } else {
+                mx += 260;
+            }
         }
 
         super.mouseClicked(mouseX, mouseY, button);
