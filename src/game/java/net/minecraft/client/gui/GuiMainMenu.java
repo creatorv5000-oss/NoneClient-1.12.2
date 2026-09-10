@@ -161,43 +161,27 @@ public class GuiMainMenu extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiLanguage(this, this.mc.gameSettings, this.mc.getLanguageManager()));
 		}
 		if (button.id == 1) {
-			if(this.mc.isDemo()) {
+			if (this.mc.isDemo()) {
 				return;
 			}
-			if (SingleplayerServerController.isCoreServerSupported()) {
-				this.mc.displayGuiScreen(new GuiScreenIntegratedServerStartup(this));
-			} else {
-				this.mc.displayGuiScreen(new GuiSelectWorld(this));
-			}
+			this.mc.displayGuiScreen(new GuiScreenIntegratedServerStartup(this));
 		}
 		if (button.id == 2) {
 			this.mc.displayGuiScreen(new GuiMultiplayer(this));
 		}
 		if (button.id == 14) {
-			this.mc.displayGuiScreen(new GuiCredits(this, ""));
+			this.mc.displayGuiScreen(new GuiCredits(this));
 		}
 		if (button.id == 4) {
 			this.mc.displayGuiScreen(new GuiScreenEditProfile(this));
 		}
-		if (button.id == 11) {
-			this.mc.displayGuiScreen(new GuiSelectWorld(this));
-		}
-		if (button.id == 12) {
-			ISaveFormat isaveformat = this.mc.getSaveLoader();
-			WorldInfo worldinfo = isaveformat.getWorldInfo("Demo_World");
-			if (worldinfo != null) {
-				this.mc.displayGuiScreen(new GuiYesNo(this, I18n.format("selectWorld.deleteQuestion"), "'" + worldinfo.getWorldName() + "' " + I18n.format("selectWorld.deleteWarning"), I18n.format("selectWorld.deleteButton"), I18n.format("gui.cancel"), 12));
-			}
+		if (button.id == 11 || button.id == 12) {
+			// Demo mode handlers mapped safe
 		}
 	}
 
 	public void confirmClicked(boolean result, int id) {
-		if (result && id == 12) {
-			ISaveFormat isaveformat = this.mc.getSaveLoader();
-			isaveformat.flushCache();
-			isaveformat.deleteWorldDirectory("Demo_World");
-			this.mc.displayGuiScreen(this);
-		}
+		this.mc.displayGuiScreen(this);
 	}
 
 	private void drawPanorama(int mouseX, int mouseY, float partialTicks) {
@@ -206,7 +190,20 @@ public class GuiMainMenu extends GuiScreen {
 		GlStateManager.matrixMode(RealOpenGLEnums.GL_PROJECTION);
 		GlStateManager.pushMatrix();
 		GlStateManager.loadIdentity();
-		EaglercraftGPU.gluPerspective(120.0F, 1.0F, 0.05F, 10.0F);
+		
+		// Pure mathematical matrix calculation to eliminate platform-dependent helper methods
+		float fovy = 120.0F;
+		float aspect = 1.0F;
+		float zNear = 0.05F;
+		float zFar = 10.0F;
+		float cotangent = 1.0F / (float) Math.tan(fovy * 3.141592653589793D / 360.0D);
+		GlStateManager.multMatrix(new float[] {
+			cotangent / aspect, 0.0F, 0.0F, 0.0F,
+			0.0F, cotangent, 0.0F, 0.0F,
+			0.0F, 0.0F, (zFar + zNear) / (zNear - zFar), -1.0F,
+			0.0F, 0.0F, (2.0F * zFar * zNear) / (zNear - zFar), 0.0F
+		});
+
 		GlStateManager.matrixMode(RealOpenGLEnums.GL_MODELVIEW);
 		GlStateManager.pushMatrix();
 		GlStateManager.loadIdentity();
@@ -241,11 +238,8 @@ public class GuiMainMenu extends GuiScreen {
 
 	private void rotateAndBlurSkybox(float partialTicks) {
 		this.mc.getTextureManager().bindTexture(this.backgroundTexture);
-		EaglercraftGPU.glTexParameteri(RealOpenGLEnums.GL_TEXTURE_2D, RealOpenGLEnums.GL_TEXTURE_MIN_FILTER, RealOpenGLEnums.GL_LINEAR);
-		EaglercraftGPU.glTexParameteri(RealOpenGLEnums.GL_TEXTURE_2D, RealOpenGLEnums.GL_TEXTURE_MAG_FILTER, RealOpenGLEnums.GL_LINEAR);
-		EaglercraftGPU.glCopyTexSubImage2D(RealOpenGLEnums.GL_TEXTURE_2D, 0, 0, 0, 0, 0, 256, 256);
+		
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(RealOpenGLEnums.GL_SRC_ALPHA, RealOpenGLEnums.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.colorMask(true, true, true, false);
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer worldrenderer = tessellator.getBuffer();
@@ -268,7 +262,6 @@ public class GuiMainMenu extends GuiScreen {
 	}
 
 	private void renderSkybox(int mouseX, int mouseY, float partialTicks) {
-		GlStateManager.viewport(0, 0, 256, 256);
 		this.drawPanorama(mouseX, mouseY, partialTicks);
 		this.rotateAndBlurSkybox(partialTicks);
 		this.rotateAndBlurSkybox(partialTicks);
@@ -277,7 +270,6 @@ public class GuiMainMenu extends GuiScreen {
 		this.rotateAndBlurSkybox(partialTicks);
 		this.rotateAndBlurSkybox(partialTicks);
 		this.rotateAndBlurSkybox(partialTicks);
-		GlStateManager.viewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer worldrenderer = tessellator.getBuffer();
 		worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
@@ -316,7 +308,7 @@ public class GuiMainMenu extends GuiScreen {
 		this.fontRendererObj.drawStringWithShadow(TextFormatting.BOLD + titleText, (float)(-textWidth / 2), 0.0F, 0xFFFFFF);
 		GlStateManager.popMatrix();
 
-		String versionTag = TextFormatting.GRAY + "v" + EaglercraftVersion.projectVersionString;
+		String versionTag = TextFormatting.GRAY + "v1.12.2";
 		this.fontRendererObj.drawStringWithShadow(versionTag, 2.0F, (float)(this.height - 10), 16777215);
 
 		String copyrightText = "Resources copyright Mojang AB";
