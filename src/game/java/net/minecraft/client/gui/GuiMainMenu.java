@@ -153,7 +153,6 @@ public class GuiMainMenu extends GuiScreen {
 		this.buttonList.add(new GuiButton(11, this.width / 2 - 100, startY, I18n.format("menu.playdemo")));
 		this.buttonResetDemo = this.addButton(new GuiButton(12, this.width / 2 - 100, startY + spacing * 1, I18n.format("menu.resetdemo")));
 	}
-
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.id == 0) {
 			this.mc.displayGuiScreen(new GuiOptions(this, this.mc.gameSettings));
@@ -165,7 +164,7 @@ public class GuiMainMenu extends GuiScreen {
 			if(this.mc.isDemo()) {
 				return;
 			}
-			if (SingleplayerServerController.isAsyncWorldLoadingSupported()) {
+			if (SingleplayerServerController.isCoreServerSupported()) {
 				this.mc.displayGuiScreen(new GuiScreenIntegratedServerStartup(this));
 			} else {
 				this.mc.displayGuiScreen(new GuiSelectWorld(this));
@@ -175,7 +174,7 @@ public class GuiMainMenu extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiMultiplayer(this));
 		}
 		if (button.id == 14) {
-			this.mc.displayGuiScreen(new GuiCredits(this));
+			this.mc.displayGuiScreen(new GuiCredits(this, ""));
 		}
 		if (button.id == 4) {
 			this.mc.displayGuiScreen(new GuiScreenEditProfile(this));
@@ -207,7 +206,7 @@ public class GuiMainMenu extends GuiScreen {
 		GlStateManager.matrixMode(RealOpenGLEnums.GL_PROJECTION);
 		GlStateManager.pushMatrix();
 		GlStateManager.loadIdentity();
-		Project.gluPerspective(120.0F, 1.0F, 0.05F, 10.0F);
+		EaglercraftGPU.gluPerspective(120.0F, 1.0F, 0.05F, 10.0F);
 		GlStateManager.matrixMode(RealOpenGLEnums.GL_MODELVIEW);
 		GlStateManager.pushMatrix();
 		GlStateManager.loadIdentity();
@@ -242,11 +241,11 @@ public class GuiMainMenu extends GuiScreen {
 
 	private void rotateAndBlurSkybox(float partialTicks) {
 		this.mc.getTextureManager().bindTexture(this.backgroundTexture);
-		GlStateManager.glTexParameteri(RealOpenGLEnums.GL_TEXTURE_2D, RealOpenGLEnums.GL_TEXTURE_MIN_FILTER, RealOpenGLEnums.GL_LINEAR);
-		GlStateManager.glTexParameteri(RealOpenGLEnums.GL_TEXTURE_2D, RealOpenGLEnums.GL_TEXTURE_MAG_FILTER, RealOpenGLEnums.GL_LINEAR);
-		GlStateManager.glCopyTexSubImage2D(RealOpenGLEnums.GL_TEXTURE_2D, 0, 0, 0, 0, 0, 256, 256);
+		EaglercraftGPU.glTexParameteri(RealOpenGLEnums.GL_TEXTURE_2D, RealOpenGLEnums.GL_TEXTURE_MIN_FILTER, RealOpenGLEnums.GL_LINEAR);
+		EaglercraftGPU.glTexParameteri(RealOpenGLEnums.GL_TEXTURE_2D, RealOpenGLEnums.GL_TEXTURE_MAG_FILTER, RealOpenGLEnums.GL_LINEAR);
+		EaglercraftGPU.glCopyTexSubImage2D(RealOpenGLEnums.GL_TEXTURE_2D, 0, 0, 0, 0, 0, 256, 256);
 		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.blendFunc(RealOpenGLEnums.GL_SRC_ALPHA, RealOpenGLEnums.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.colorMask(true, true, true, false);
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer worldrenderer = tessellator.getBuffer();
@@ -269,7 +268,6 @@ public class GuiMainMenu extends GuiScreen {
 	}
 
 	private void renderSkybox(int mouseX, int mouseY, float partialTicks) {
-		this.mc.getFramebuffer().unbindFramebuffer();
 		GlStateManager.viewport(0, 0, 256, 256);
 		this.drawPanorama(mouseX, mouseY, partialTicks);
 		this.rotateAndBlurSkybox(partialTicks);
@@ -279,7 +277,6 @@ public class GuiMainMenu extends GuiScreen {
 		this.rotateAndBlurSkybox(partialTicks);
 		this.rotateAndBlurSkybox(partialTicks);
 		this.rotateAndBlurSkybox(partialTicks);
-		this.mc.getFramebuffer().bindFramebuffer(true);
 		GlStateManager.viewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
 		Tessellator tessellator = Tessellator.getInstance();
 		WorldRenderer worldrenderer = tessellator.getBuffer();
@@ -319,19 +316,16 @@ public class GuiMainMenu extends GuiScreen {
 		this.fontRendererObj.drawStringWithShadow(TextFormatting.BOLD + titleText, (float)(-textWidth / 2), 0.0F, 0xFFFFFF);
 		GlStateManager.popMatrix();
 
-		String versionTag = TextFormatting.GRAY + "v" + EaglercraftVersion.mainMenuString;
+		String versionTag = TextFormatting.GRAY + "v" + EaglercraftVersion.projectVersionString;
 		this.fontRendererObj.drawStringWithShadow(versionTag, 2.0F, (float)(this.height - 10), 16777215);
 
 		String copyrightText = "Resources copyright Mojang AB";
 		this.fontRendererObj.drawStringWithShadow(copyrightText, (float)(this.width - this.fontRendererObj.getStringWidth(copyrightText) - 2), (float)(this.height - 10), 16777215);
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
-	
 	}
 
-	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 }
-
