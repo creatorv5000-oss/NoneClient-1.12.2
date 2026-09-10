@@ -13,7 +13,6 @@ import com.isacofff.clientbase.modules.features.Keystrokes;
 import com.isacofff.clientbase.modules.features.Ping;
 import com.isacofff.clientbase.modules.features.ToggleSprint;
 import com.isacofff.clientbase.modules.features.ViaBlocks;
-import com.isacofff.clientbase.modules.features.ViaItems;
 import com.isacofff.clientbase.modules.features.ViaVersion;
 import com.isacofff.clientbase.modules.features.Zoom;
 
@@ -40,9 +39,8 @@ public class Manager {
         modules.add(new ToggleSprint());
         modules.add(new Zoom());
 
-        // Multi-Protocol 1.21 Feature Suite
+        // Multi-Protocol 1.21 Feature Suite (ViaItems removed)
         modules.add(new ViaVersion());
-        modules.add(new ViaItems());
         modules.add(new ViaBlocks());
     }
 
