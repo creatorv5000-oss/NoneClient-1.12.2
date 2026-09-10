@@ -12,7 +12,9 @@ import com.isacofff.clientbase.modules.features.Hitboxes;
 import com.isacofff.clientbase.modules.features.Keystrokes;
 import com.isacofff.clientbase.modules.features.Ping;
 import com.isacofff.clientbase.modules.features.ToggleSprint;
+import com.isacofff.clientbase.modules.features.ViaBlocks;
 import com.isacofff.clientbase.modules.features.ViaItems;
+import com.isacofff.clientbase.modules.features.ViaVersion;
 import com.isacofff.clientbase.modules.features.Zoom;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ public class Manager {
         modules.add(new FullBright());
         modules.add(new ExampleModule());
         
-        // Register all your active PvP features
+        // Active PvP Client Mod Layout
         modules.add(new ArmorHUD());
         modules.add(new CPS());
         modules.add(new Coordinates());
@@ -36,8 +38,12 @@ public class Manager {
         modules.add(new Keystrokes());
         modules.add(new Ping());
         modules.add(new ToggleSprint());
-        modules.add(new ViaItems());
         modules.add(new Zoom());
+
+        // Multi-Protocol 1.21 Feature Suite
+        modules.add(new ViaVersion());
+        modules.add(new ViaItems());
+        modules.add(new ViaBlocks());
     }
 
     public void onTick() {
