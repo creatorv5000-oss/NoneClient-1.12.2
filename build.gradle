@@ -1,45 +1,78 @@
-name: Build NoneClient
+import org.teavm.gradle.api.OptimizationLevel
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
+buildscript {
+    dependencies {
+        classpath files("src/teavmc-classpath/resources")
+    }
+}
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+plugins {
+    id "java"
+    id "eclipse"
+    id "org.teavm" version "0.9.2"
+}
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+sourceSets {
+    main {
+        java {
+            srcDirs(
+		"src/main/java",
+                "src/game/java",
+               	"src/protocol-game/java",
+		"src/teavm/java"
+            )
+        }
+    }
+    eagler {
+        java {
+	    srcDir 'src/main/java'
+            srcDir 'src/game/java'
+            srcDir 'src/protocol-game/java'
+	    srcDir 'src/lwjgl/java'
+        }
+    }
+}
 
-    - name: Set up Java 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: 'gradle'
+repositories {
+    mavenCentral()
+}
 
-    - name: Make Gradle executable
-      run: chmod +x gradlew
+dependencies {
+    teavm(teavm.libs.jso)
+    teavm(teavm.libs.jsoApis)
+    compileOnly "org.teavm:teavm-core:0.9.2" // workaround for a few hacks
+    eaglerImplementation fileTree(dir: './desktopRuntime/eclipseProject/deps_fix/', include: '*.jar')
+}
 
-    - name: Build
-      run: ./gradlew compileJava --no-daemon
+def folder = "javascript"
+def name = "classes.js"
 
-    - name: Make EPK
-      run: echo "Making EPK..."
+teavm.js {
+    compileJava.options.encoding = "UTF-8"
+    obfuscated = true // Change to "true" for release, used for debugging
+    sourceMap = true
+    targetFileName = "../" + name
+    optimization = OptimizationLevel.AGGRESSIVE // Change to "AGGRESSIVE" for release
+    outOfProcess = false
+    fastGlobalAnalysis = false
+    processMemory = 1024
+    entryPointName = "main"
+    mainClass = "net.lax1dude.eaglercraft.internal.teavm.MainClass"
+    outputDir = file(folder)
+    properties = [ "java.util.TimeZone.autodetect": "true" ]
+    debugInformation = false
+}
 
-    - name: Build JavaScript
-      run: ./gradlew teavmCompileJS --no-daemon
+tasks.register('runclient', JavaExec) {
+    jvmArgs "-Djava.library.path=" + System.getProperty("user.dir") + "/desktopRuntime"
+    classpath = sourceSets.eagler.compileClasspath
+    group = "Eaglercraft-1.12"
+    description = "Runs the client"
+    classpath sourceSets.eagler.runtimeClasspath
+    if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+        jvmArgs '-XstartOnFirstThread'
+    }
 
-    - name: Make Offline Client
-      run: echo "Making Offline Client..."
-
-    - name: Upload NoneClient
-      uses: actions/upload-artifact@v4
-      with:
-        name: NoneClient-Build
-        path: javascript/
-        retention-days: 5
+    workingDir "./desktopRuntime"
+    main 'net.lax1dude.eaglercraft.internal.MainClass'
+}
