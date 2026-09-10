@@ -8,11 +8,11 @@ import net.minecraft.util.ChatAllowedCharacters;
 
 import java.io.IOException;
 
-public class ClickGuiScreen extends GuiScreen {
+public class ClickGuiScreen extends Guiscreen {
 
     private int x = 80;
     private int y = 50;
-    private Category category = Category.General;
+    private Category Category = Category.General;
     private String searchQuery = "";
     private boolean searchFocused = false;
 
