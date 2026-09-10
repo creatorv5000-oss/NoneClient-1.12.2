@@ -8,7 +8,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 
 import java.io.IOException;
 
-public class ClickGuiScreen extends GuiScreen {
+private Category category = Category.Client;
 
     private int x = 80;
     private int y = 50;
