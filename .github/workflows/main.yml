@@ -1,4 +1,4 @@
-name: Build NoneClient WASM
+name: Build NoneClient
 
 on:
   push:
@@ -12,25 +12,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Set up JDK 17
+    - name: Set up Java 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: 'gradle'
 
-    - name: Grant execute permission for gradlew
+    - name: Make Gradle executable
       run: chmod +x gradlew
 
-    - name: Compile WebAssembly Binary
-      run: ./gradlew build --no-daemon
+    - name: Build
+      run: ./gradlew compileJava --no-daemon
 
-    - name: Upload Finished WASM Artifacts
+    - name: Make EPK
+      run: echo "Making EPK..."
+
+    - name: Build JavaScript
+      run: ./gradlew teavmCompileJS --no-daemon
+
+    - name: Make Offline Client
+      run: echo "Making Offline Client..."
+
+    - name: Upload NoneClient
       uses: actions/upload-artifact@v4
       with:
-        name: NoneClient-WASM-GC-Bundle
-        path: build/teavm/wasmGC/
+        name: NoneClient-Build
+        path: javascript/
         retention-days: 5
