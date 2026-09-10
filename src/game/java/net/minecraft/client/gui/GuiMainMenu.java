@@ -326,12 +326,10 @@ public class GuiMainMenu extends GuiScreen {
 		this.fontRendererObj.drawStringWithShadow(copyrightText, (float)(this.width - this.fontRendererObj.getStringWidth(copyrightText) - 2), (float)(this.height - 10), 16777215);
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
+	
 	}
 
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-	}
-}
+	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
