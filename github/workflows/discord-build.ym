@@ -6,34 +6,56 @@ jobs:
   notify-build:
     runs-on: ubuntu-latest
     steps:
-      # 1. Sends the "Build Started" alert to Discord
-      - name: Alert Build Started
-        uses: dragosco/discord-build-notifications@v1
-        with:
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          status: 'started'
-          service: 'NoneClient Build'
+      # 1. Prepare environment
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      # 2. Emulates your project compiling code
+      # 2. Sends the "Build Started" card to Discord
+      - name: Alert Build Started
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "embeds": [{
+                   "title": "🛠️ Build Started",
+                   "description": "**Service:** NoneClient Build\n**Triggered by:** ${{ github.actor }}",
+                   "color": 8421504
+                 }]
+               }' \
+               ${{ secrets.DISCORD_WEBHOOK }}
+
+      # 3. Simulates compiling your project files
       - name: Running Code Build
         run: |
-          echo "Compiling project files..."
+          echo "Compiling NoneClient project files..."
           sleep 5
 
-      # 3. Sends the "Build Succeeded" alert to Discord
+      # 4. Sends the green "Build Succeeded" card to Discord
       - name: Alert Build Succeeded
         if: success()
-        uses: dragosco/discord-build-notifications@v1
-        with:
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          status: 'success'
-          service: 'NoneClient Build'
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "embeds": [{
+                   "title": "✅ Build Succeeded",
+                   "description": "**Service:** NoneClient Build\n**Status:** Successfully compiled and ready.",
+                   "color": 3066993
+                 }]
+               }' \
+               ${{ secrets.DISCORD_WEBHOOK }}
 
-      # 4. Sends an alert if the build ever breaks
+      # 5. Sends a red "Build Failed" card if anything goes wrong
       - name: Alert Build Failed
         if: failure()
-        uses: dragosco/discord-build-notifications@v1
-        with:
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          status: 'failure'
-          service: 'NoneClient Build'
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "embeds": [{
+                   "title": "❌ Build Failed",
+                   "description": "**Service:** NoneClient Build\n**Status:** Error caught during compilation process.",
+                   "color": 15158332
+                 }]
+               }' \
+               ${{ secrets.DISCORD_WEBHOOK }}
