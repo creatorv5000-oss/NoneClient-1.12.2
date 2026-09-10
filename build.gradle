@@ -36,7 +36,9 @@ repositories {
 }
 
 teavm {
-    targetType = "WASM"
-    optimizationLevel = "ADVANCED"
-    stopOnErrors = true
+    all {
+        targetType = "WEBASSEMBLY"
+        optimizationLevel = "ADVANCED"
+        stopOnErrors = true
+    }
 }
