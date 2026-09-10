@@ -76,3 +76,14 @@ tasks.register('runclient', JavaExec) {
     workingDir "./desktopRuntime"
     main 'net.lax1dude.eaglercraft.internal.MainClass'
 }
+// Add this block at the bottom of your build.gradle file
+teavm {
+    wasm {
+        enabled = true
+        // Configures the task compiler output to target modern WebAssembly 
+    }
+    js {
+        enabled = false
+        // Disables standard JavaScript output generation tasks
+    }
+}
