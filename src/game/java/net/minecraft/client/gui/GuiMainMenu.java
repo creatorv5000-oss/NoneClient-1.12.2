@@ -170,7 +170,7 @@ public class GuiMainMenu extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiMultiplayer(this));
 		}
 		if (button.id == 14) {
-			this.mc.displayGuiScreen(new GuiCredits(this));
+			this.mc.displayGuiScreen(new GuiCredits(this, ""));
 		}
 		if (button.id == 4) {
 			this.mc.displayGuiScreen(new GuiScreenEditProfile(this));
@@ -191,7 +191,6 @@ public class GuiMainMenu extends GuiScreen {
 		GlStateManager.pushMatrix();
 		GlStateManager.loadIdentity();
 		
-		// Pure mathematical matrix calculation to eliminate platform-dependent helper methods
 		float fovy = 120.0F;
 		float aspect = 1.0F;
 		float zNear = 0.05F;
