@@ -1,20 +1,43 @@
 package com.isacofff.clientbase.modules;
 
-import com.isacofff.clientbase.modules.features.ClickGui;
-import com.isacofff.clientbase.modules.features.ExampleModule;
-import com.isacofff.clientbase.modules.features.FullBright;
 import com.isacofff.clientbase.Category;
+import com.isacofff.clientbase.modules.features.ArmorHUD;
+import com.isacofff.clientbase.modules.features.CPS;
+import com.isacofff.clientbase.modules.features.ClickGui;
+import com.isacofff.clientbase.modules.features.Coordinates;
+import com.isacofff.clientbase.modules.features.ExampleModule;
+import com.isacofff.clientbase.modules.features.FPS;
+import com.isacofff.clientbase.modules.features.FullBright;
+import com.isacofff.clientbase.modules.features.Hitboxes;
+import com.isacofff.clientbase.modules.features.Keystrokes;
+import com.isacofff.clientbase.modules.features.Ping;
+import com.isacofff.clientbase.modules.features.ToggleSprint;
+import com.isacofff.clientbase.modules.features.ViaItems;
+import com.isacofff.clientbase.modules.features.Zoom;
 
 import java.util.ArrayList;
 
 public class Manager {
 
     public final ArrayList<Module> modules = new ArrayList<>();
+    
     //Add the modules here for them to appear in the ClickGui
     public void init() {
-    modules.add(new ClickGui());
-    modules.add(new FullBright());
-    modules.add(new ExampleModule());
+        modules.add(new ClickGui());
+        modules.add(new FullBright());
+        modules.add(new ExampleModule());
+        
+        // Register your active PvP suite features
+        modules.add(new ArmorHUD());
+        modules.add(new CPS());
+        modules.add(new Coordinates());
+        modules.add(new FPS());
+        modules.add(new Hitboxes());
+        modules.add(new Keystrokes());
+        modules.add(new Ping());
+        modules.add(new ToggleSprint());
+        modules.add(new ViaItems());
+        modules.add(new Zoom());
     }
 
     public void onTick() {
