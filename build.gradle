@@ -35,10 +35,7 @@ repositories {
     mavenCentral()
 }
 
-teavm {
-    all {
-        targetType = "WEBASSEMBLY"
-        optimizationLevel = "ADVANCED"
-        stopOnErrors = true
-    }
+compileTeavmJava {
+    optimizationLevel = "ADVANCED"
+    stopOnErrors = true
 }
