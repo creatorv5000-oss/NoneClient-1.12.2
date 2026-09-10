@@ -32,7 +32,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: NoneClient-WASM-GC-Bundle
-        path: |
-          wasm_gc_teavm/
-          javascript/
+        path: build/teavm/wasmGC/
         retention-days: 5
