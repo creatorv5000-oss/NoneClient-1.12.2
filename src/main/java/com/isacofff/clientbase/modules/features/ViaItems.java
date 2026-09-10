@@ -12,7 +12,7 @@ public class ViaItems extends Module {
     }
 
     public String getTranslatedName(ItemStack stack, String originalName) {
-        if (!this.isEnabled() || stack.isEmpty()) {
+        if (!this.isEnabled() || stack == null || stack.func_190926_b()) {
             return originalName;
         }
 
@@ -38,7 +38,7 @@ public class ViaItems extends Module {
     }
 
     public void modifyTooltip(ItemStack stack, List<String> tooltip) {
-        if (!this.isEnabled() || stack.isEmpty() || tooltip.isEmpty()) {
+        if (!this.isEnabled() || stack == null || stack.func_190926_b() || tooltip.isEmpty()) {
             return;
         }
 
