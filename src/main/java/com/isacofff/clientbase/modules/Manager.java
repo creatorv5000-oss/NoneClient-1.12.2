@@ -27,6 +27,15 @@ public class Manager {
         modules.add(new ClickGui());
         modules.add(new FullBright());
         modules.add(new ExampleModule());
+        modules.add(new ArmorHUD());
+        modules.add(new CPS());
+        modules.add(new Coordinates());
+        modules.add(new FPS());
+        modules.add(new Hitboxes());
+        modules.add(new Keystrokes());
+        modules.add(new Ping());
+        modules.add(new ToggleSprint());
+        modules.add(new Zoom());
         
         // Active PvP Client Mod Layout
         modules.add(new ArmorHUD());
