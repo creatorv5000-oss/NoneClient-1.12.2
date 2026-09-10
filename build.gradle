@@ -63,6 +63,19 @@ teavm.js {
     debugInformation = false
 }
 
+// Added block to build NoneClient as a WASM module
+teavm.wasm {
+    compileJava.options.encoding = "UTF-8"
+    targetFileName = "classes.wasm"
+    optimization = OptimizationLevel.AGGRESSIVE
+    outOfProcess = false
+    fastGlobalAnalysis = false
+    processMemory = 1024
+    mainClass = "net.lax1dude.eaglercraft.internal.teavm.MainClass"
+    outputDir = file("wasm_gc_teavm")
+    debugInformation = false
+}
+
 tasks.register('runclient', JavaExec) {
     jvmArgs "-Djava.library.path=" + System.getProperty("user.dir") + "/desktopRuntime"
     classpath = sourceSets.eagler.compileClasspath
