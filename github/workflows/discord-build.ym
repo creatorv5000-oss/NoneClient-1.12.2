@@ -1,0 +1,39 @@
+name: Discord Build Notification
+
+on: [push, pull_request]
+
+jobs:
+  notify-build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Sends the "Build Started" alert to Discord
+      - name: Alert Build Started
+        uses: dragosco/discord-build-notifications@v1
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          status: 'started'
+          service: 'NoneClient Build'
+
+      # 2. Emulates your project compiling code
+      - name: Running Code Build
+        run: |
+          echo "Compiling project files..."
+          sleep 5
+
+      # 3. Sends the "Build Succeeded" alert to Discord
+      - name: Alert Build Succeeded
+        if: success()
+        uses: dragosco/discord-build-notifications@v1
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          status: 'success'
+          service: 'NoneClient Build'
+
+      # 4. Sends an alert if the build ever breaks
+      - name: Alert Build Failed
+        if: failure()
+        uses: dragosco/discord-build-notifications@v1
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          status: 'failure'
+          service: 'NoneClient Build'
