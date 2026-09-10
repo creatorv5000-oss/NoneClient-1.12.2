@@ -12,7 +12,7 @@ public class ViaItems extends Module {
     }
 
     public String getTranslatedName(ItemStack stack, String originalName) {
-        if (!this.isEnabled() || stack == null || stack.func_190926_b()) {
+        if (!this.isEnabled() || stack == null) {
             return originalName;
         }
 
@@ -38,7 +38,7 @@ public class ViaItems extends Module {
     }
 
     public void modifyTooltip(ItemStack stack, List<String> tooltip) {
-        if (!this.isEnabled() || stack == null || stack.func_190926_b() || tooltip.isEmpty()) {
+        if (!this.isEnabled() || stack == null || tooltip == null || tooltip.size() == 0) {
             return;
         }
 
@@ -48,11 +48,11 @@ public class ViaItems extends Module {
         String nameCheck = stack.getDisplayName().toLowerCase();
 
         if (nameCheck.contains("netherite")) {
-            tooltip.add(1, "\u00a77Tier: \u00a75Modern 1.16+");
+            tooltip.add("\u00a77Tier: \u00a75Modern 1.16+");
         } else if (nameCheck.contains("mace")) {
-            tooltip.add(1, "\u00a77Weapon: \u00a7eModern 1.21 Smash Attack");
+            tooltip.add("\u00a77Weapon: \u00a7eModern 1.21 Smash Attack");
         } else if (nameCheck.contains("wind charge")) {
-            tooltip.add(1, "\u00a77Projectile: \u00a7aKnockback Blast");
+            tooltip.add("\u00a77Projectile: \u00a7aKnockback Blast");
         }
     }
 }
