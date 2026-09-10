@@ -26,11 +26,13 @@ jobs:
       run: chmod +x gradlew
 
     - name: Compile WebAssembly Binary
-      run: ./gradlew teavmCompileWasm --no-daemon
+      run: ./gradlew build --no-daemon
 
     - name: Upload Finished WASM Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: NoneClient-WASM-GC-Bundle
-        path: wasm_gc_teavm/
+        path: |
+          wasm_gc_teavm/
+          javascript/
         retention-days: 5
