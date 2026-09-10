@@ -18,255 +18,168 @@ public class ClickGuiScreen extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        // Feather Client premium dark glass backing overlay panel layout
+        drawRect(0, 0, width, height, 0x440A0A0C);
 
-        drawRect(0, 0, width, height, 0x77000000);
+        // Core visual panels: Main Container Frame (530 width, 350 height)
+        drawRect(x, y, x + 530, y + 350, 0xDD121316); // Translucent Main Body
+        drawRect(x, y, x + 140, y + 350, 0xF016181C); // Left Sidebar Base Layer
 
-        drawRect(x, y, x + 510, y + 335, 0xFF111214);
-        drawRect(x, y, x + 130, y + 335, 0xFF181A1D);
-        drawRect(x + 130, y, x + 131, y + 335, 0xFF282B30);
+        // Sleek subtle column dividing lines (1px)
+        drawRect(x + 140, y, x + 141, y + 350, 0x1F7F8C9D);
 
-        Minecraft.getMinecraft().fontRendererObj.drawString("NoneClient", x + 15, y + 15, 0xFFFFFFFF);
-        Minecraft.getMinecraft().fontRendererObj.drawString("1.12.2", x + 15, y + 27, 0xFF686D75);
+        // Brand Typography: Feather style minimal branding layout
+        Minecraft.getMinecraft().fontRendererObj.drawString("NoneClient", x + 18, y + 16, 0xFFFFFFFF);
+        Minecraft.getMinecraft().fontRendererObj.drawString("v1.12.2", x + 18, y + 28, 0x55FFFFFF);
 
-        int cy = y + 48;
+        int cy = y + 54;
 
+        // Render Tabs Sidebar List Loop Layer
         for (Category c : Category.values()) {
-
             boolean selected = c == category;
 
+            // Render modern flat hover accent bar blocks if selected
             if (selected) {
-                drawRect(x + 8, cy, x + 120, cy + 24, 0xFF24282E);
-                drawRect(x + 8, cy, x + 10, cy + 24, 0xFF4C9AFF);
+                drawRect(x + 10, cy, x + 130, cy + 22, 0x1A4C9AFF); // Soft highlight backing capsule
+                drawRect(x + 10, cy + 4, x + 12, cy + 18, 0xFF4C9AFF); // Left vertical micro accent pillar
             }
 
             Minecraft.getMinecraft().fontRendererObj.drawString(
                     c.name(),
-                    x + 19,
-                    cy + 8,
-                    selected ? 0xFFFFFFFF : 0xFF858A92
+                    x + 22,
+                    cy + 7,
+                    selected ? 0xFF4C9AFF : 0x88FFFFFF
             );
 
-            cy += 29;
+            cy += 26;
         }
 
-        int sx = x + 145;
-        int sy = y + 14;
+        // Search Input Box Positioning Configurations
+        int sx = x + 155;
+        int sy = y + 16;
 
-        drawRect(sx, sy, sx + 340, sy + 23, 0xFF191B1F);
-
-        drawRect(
-                sx,
-                sy,
-                sx + 340,
-                sy + 1,
-                searchFocused ? 0xFF4C9AFF : 0xFF292C31
-        );
+        // Background input housing
+        drawRect(sx, sy, sx + 355, sy + 22, 0x33000000);
+        // Clean micro indicator active box underlines
+        drawRect(sx, sy + 21, sx + 355, sy + 22, searchFocused ? 0xFF4C9AFF : 0x22FFFFFF);
 
         String text = searchQuery;
-
         if (text.isEmpty() && !searchFocused) {
-            text = "Search modules...";
-        } else if (
-                searchFocused &&
-                System.currentTimeMillis() % 1000 < 500
-        ) {
+            text = "Search mods...";
+        } else if (searchFocused && System.currentTimeMillis() % 1000 < 500) {
             text += "_";
         }
 
         Minecraft.getMinecraft().fontRendererObj.drawString(
                 text,
                 sx + 8,
-                sy + 8,
-                searchQuery.isEmpty() ? 0xFF666A70 : 0xFFE8E8E8
+                sy + 7,
+                searchQuery.isEmpty() ? 0x44FFFFFF : 0xCCFFFFFF
         );
 
-        int my = y + 50;
+        // Main Module List Rendering Stream
+        int my = y + 54;
 
-        for (Module module :
-                Client.manager.getModulesByCategory(category)) {
-
-            if (
-                    !searchQuery.isEmpty() &&
-                    !module.getName()
-                            .toLowerCase()
-                            .contains(searchQuery.toLowerCase())
-            ) {
+        for (Module module : Client.manager.getModulesByCategory(category)) {
+            if (!searchQuery.isEmpty() && !module.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
                 continue;
             }
 
             boolean enabled = module.isEnabled();
 
-            drawRect(
-                    x + 145,
-                    my,
-                    x + 495,
-                    my + 40,
-                    enabled ? 0xFF1D2632 : 0xFF181A1E
-            );
+            // Feather UI clean capsule grid frames layout
+            drawRect(x + 155, my, x + 510, my + 38, 0x22FFFFFF); // Soft outer cell glow mapping container
+            drawRect(x + 155, my, x + 156, my + 38, enabled ? 0xFF4C9AFF : 0x33FFFFFF); // Dynamic feature state highlights
 
-            drawRect(
-                    x + 145,
-                    my,
-                    x + 495,
-                    my + 1,
-                    enabled ? 0xFF31547E : 0xFF292C31
-            );
-
+            // Module Label Text
             Minecraft.getMinecraft().fontRendererObj.drawString(
                     module.getName(),
-                    x + 160,
-                    my + 10,
-                    enabled ? 0xFF4C9AFF : 0xFFE8E8E8
+                    x + 168,
+                    my + 9,
+                    enabled ? 0xFFFFFFFF : 0xAAFFFFFF
             );
 
             String description = module.getDescription();
-
-            if (
-                    description != null &&
-                    !description.isEmpty() &&
-                    !description.equals("- - -")
-            ) {
-
+            if (description != null && !description.isEmpty() && !description.equals("- - -")) {
                 Minecraft.getMinecraft().fontRendererObj.drawString(
                         description,
-                        x + 160,
-                        my + 24,
-                        0xFF666B73
+                        x + 168,
+                        my + 22,
+                        0x44FFFFFF
                 );
             }
 
-            int tx = x + 455;
+            // High Tech Rounded Pill Switch Simulation Positioning
+            int tx = x + 465;
             int ty = my + 14;
 
-            drawRect(
-                    tx,
-                    ty,
-                    tx + 26,
-                    ty + 12,
-                    enabled ? 0xFF4C9AFF : 0xFF30343A
-            );
+            // Render Switch Slider Background Housing Channel
+            drawRect(tx, ty, tx + 30, ty + 12, enabled ? 0x444C9AFF : 0x22FFFFFF);
 
+            // Render Active Thumb Slider Knobs
             if (enabled) {
-                drawRect(
-                        tx + 16,
-                        ty - 1,
-                        tx + 26,
-                        ty + 13,
-                        0xFFFFFFFF
-                );
+                drawRect(tx + 18, ty - 1, tx + 29, ty + 13, 0xFF4C9AFF);
             } else {
-                drawRect(
-                        tx,
-                        ty - 1,
-                        tx + 10,
-                        ty + 13,
-                        0xFF777C84
-                );
+                drawRect(tx + 1, ty - 1, tx + 12, ty + 13, 0x66FFFFFF);
             }
 
-            my += 48;
+            my += 44;
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
-    protected void mouseClicked(
-            int mouseX,
-            int mouseY,
-            int button
-    ) throws IOException {
+    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+        int sx = x + 155;
+        int sy = y + 16;
 
-        int sx = x + 145;
-        int sy = y + 14;
+        searchFocused = mouseX >= sx && mouseX <= sx + 355 && mouseY >= sy && mouseY <= sy + 22;
 
-        searchFocused =
-                mouseX >= sx &&
-                mouseX <= sx + 340 &&
-                mouseY >= sy &&
-                mouseY <= sy + 23;
-
-        int cy = y + 48;
+        int cy = y + 54;
 
         for (Category c : Category.values()) {
-
-            if (
-                    mouseX >= x + 8 &&
-                    mouseX <= x + 120 &&
-                    mouseY >= cy &&
-                    mouseY <= cy + 24
-            ) {
+            if (mouseX >= x + 10 && mouseX <= x + 130 && mouseY >= cy && mouseY <= cy + 22) {
                 category = c;
                 return;
             }
-
-            cy += 29;
+            cy += 26;
         }
 
-        int my = y + 50;
+        int my = y + 54;
 
-        for (Module module :
-                Client.manager.getModulesByCategory(category)) {
-
-            if (
-                    !searchQuery.isEmpty() &&
-                    !module.getName()
-                            .toLowerCase()
-                            .contains(searchQuery.toLowerCase())
-            ) {
+        for (Module module : Client.manager.getModulesByCategory(category)) {
+            if (!searchQuery.isEmpty() && !module.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
                 continue;
             }
 
-            if (
-                    mouseX >= x + 145 &&
-                    mouseX <= x + 495 &&
-                    mouseY >= my &&
-                    mouseY <= my + 40
-            ) {
+            if (mouseX >= x + 155 && mouseX <= x + 510 && mouseY >= my && mouseY <= my + 38) {
                 module.toggle();
                 return;
             }
-
-            my += 48;
+            my += 44;
         }
 
         super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    protected void keyTyped(
-            char typedChar,
-            int keyCode
-    ) throws IOException {
-
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
         if (searchFocused) {
-
             if (keyCode == 1) {
                 searchFocused = false;
-
             } else if (keyCode == 14) {
-
                 if (!searchQuery.isEmpty()) {
-                    searchQuery = searchQuery.substring(
-                            0,
-                            searchQuery.length() - 1
-                    );
+                    searchQuery = searchQuery.substring(0, searchQuery.length() - 1);
                 }
-
-            } else if (
-                    ChatAllowedCharacters
-                            .isAllowedCharacter(typedChar)
-            ) {
+            } else if (ChatAllowedCharacters.isAllowedCharacter(typedChar)) {
                 searchQuery += typedChar;
             }
-
         } else {
-
             if (keyCode == 1) {
                 mc.displayGuiScreen(null);
                 return;
             }
-
             super.keyTyped(typedChar, keyCode);
         }
     }
