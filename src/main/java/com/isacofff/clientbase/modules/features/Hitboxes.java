@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
-import org.lwjgl.opengl.GL11;
 
 public class Hitboxes extends Module {
 
@@ -25,12 +24,6 @@ public class Hitboxes extends Module {
         double renderPosX = mc.getRenderManager().viewerPosX;
         double renderPosY = mc.getRenderManager().viewerPosY;
         double renderPosZ = mc.getRenderManager().viewerPosZ;
-
-        GL11.glPushMatrix();
-        GL11.glDepthMask(false);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_BLEND);
 
         for (Entity entity : mc.world.loadedEntityList) {
             if (entity == mc.player || !(entity instanceof EntityLivingBase)) {
@@ -50,7 +43,11 @@ public class Hitboxes extends Module {
             float green = 0.6F;
             float blue = 1.0F;
 
-            double distance = mc.player.getDistance(target.posX, target.posY, target.posZ);
+            double deltaX = mc.player.posX - target.posX;
+            double deltaY = mc.player.posY - target.posY;
+            double deltaZ = mc.player.posZ - target.posZ;
+            double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+
             if (distance <= 3.0D) {
                 red = 1.0F;
                 green = 0.0F;
@@ -65,10 +62,5 @@ public class Hitboxes extends Module {
 
             RenderGlobal.drawSelectionBoundingBox(bb, red, green, blue, 1.0F);
         }
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glDepthMask(true);
-        GL11.glPopMatrix();
     }
 }
