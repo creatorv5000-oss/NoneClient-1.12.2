@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ViaItemsReMade extends Module {
 
-    public ViaItems() {
+    public ViaItemsReMade() {
         super("ViaItems", "Handles text styles and model translation for modern items.", Category.Render);
     }
 
