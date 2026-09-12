@@ -45,6 +45,7 @@ import net.minecraft.client.audio.MusicTicker;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.*;
+import com.isacofff.clientbase.gui.ClickGuiScreen;
 import net.minecraft.client.gui.advancements.GuiScreenAdvancements;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
