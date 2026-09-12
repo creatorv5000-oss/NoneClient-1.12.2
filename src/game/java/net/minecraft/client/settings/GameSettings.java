@@ -146,7 +146,7 @@ public class GameSettings {
 	public KeyBinding field_193629_ap = new KeyBinding("key.saveToolbarActivator", 46, "key.categories.creative");
 	public KeyBinding field_193630_aq = new KeyBinding("key.loadToolbarActivator", 45, "key.categories.creative");
 
-   public KeyBinding keyBindClickGui = new KeyBinding("ClickGui", KeyboardConstants.KEY_INSERT, "key.categories.misc");
+   public KeyBinding keyBindClickGui = new KeyBinding("ClickGui", KeyboardConstants.KEY_K, "key.categories.misc");
     //To change the bind you must change the KeyboardConstants to the key you want
 	public KeyBinding[] keyBindings;
 	protected Minecraft mc;
